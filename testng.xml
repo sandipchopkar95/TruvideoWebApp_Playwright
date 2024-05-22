@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Parallel Suite" parallel="tests" thread-count="3" verbose="3"
+	preserve-order="true">
+	<test name="Login Page Test">
+		<classes>
+			<class name="com.truvideo.tests.LoginPageTest"></class>
+		</classes>
+	</test>
+	<test name="Home page Test">
+		<classes>
+			<class name="com.truvideo.tests.HomePageTest"></class>
+		</classes>
+	</test>
+	<test name="Order List Page Test">
+		<classes>
+			<class name="com.truvideo.tests.OrderListPageTest"></class>
+		</classes>
+	</test>
+</suite> 
