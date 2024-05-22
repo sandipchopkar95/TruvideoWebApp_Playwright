@@ -7,4 +7,6 @@ public class AppConstants {
 	public static final String REPAIR_ORDERS_PAGE_TITLE = "TruVideo - Repair Orders";
 	public static final String ADD_REPAIR_ORDER_PAGE_HEADING = "Add Repair Order";
 	public static final String ORDER_DETAILS_PAGE_TITLE = "TruVideo - View Repair Order";
+	public static final String SIGN_UP_PAGE_TITLE="TruVideo - Sign Up";
+	public static final String FORGOT_PASSWORD_PAGE_TITLE="TruVideo - Forgot Password";
 }
