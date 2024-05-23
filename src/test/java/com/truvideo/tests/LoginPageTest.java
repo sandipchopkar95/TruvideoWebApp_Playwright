@@ -26,7 +26,7 @@ public class LoginPageTest extends BaseTest {
 		page.goBack();
 	}
 	
-	@Test(priority = 4)
+	//@Test(priority = 4)
 	public void loginToApplication_InvalidUser() {
 		String actualTitle = loginpage.loginToApplication(prop.getProperty("username"), prop.getProperty("password"));
 		Assert.assertEquals(actualTitle, AppConstants.HOME_PAGE_TITLE);

@@ -14,9 +14,9 @@ public class AppiumFactory extends JavaUtility {
 
 	public static AppiumDriver launchApp() throws MalformedURLException {
 		startAppiumService();
-		UiAutomator2Options options = new UiAutomator2Options().setPlatformName("OSverison")
+		UiAutomator2Options options = new UiAutomator2Options().setPlatformName(prop.getProperty("OSverison"))
 				.setDeviceName(prop.getProperty("DeviceName")).setPlatformVersion(prop.getProperty("platformVersion"))
-				.setApp("C:\\Users\\windows10\\Desktop\\MyCode\\1032\\RCTruvideoflutter.apk")
+				.setApp("C:\\Users\\Badal\\Desktop\\Builds\\RCTruvideoflutter.apk")
 				.setAutoGrantPermissions(true).setAutomationName("UiAutomator2");
 		driver = new AppiumDriver(service, options);
 		System.out.println("Browser started");
