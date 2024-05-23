@@ -2,24 +2,20 @@ package com.truvideo.factory;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.Properties;
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
+import com.truvideo.utility.JavaUtility;
 import com.microsoft.playwright.BrowserType.LaunchOptions;
 
-public class PlaywrightFactory {
+public class PlaywrightFactory extends JavaUtility {
 	Playwright playwright;
 	Browser browser;
 	BrowserContext browserContext;
 	Page page;
-	Properties prop;
 
 	Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
 	int width = (int) screensize.getWidth();
@@ -78,24 +74,16 @@ public class PlaywrightFactory {
 		return getPage();
 	}
 
-	// this method is used to initialize the properties from config file
-	public Properties init_prop() {
-		try {
-			prop = new Properties();
-			FileInputStream ip = new FileInputStream("./src/test/resources/config/config.properties");
-			prop.load(ip);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException f) {
-			f.printStackTrace();
-		}
-		return prop;
-	}
+	/*
+	 * public static String takeScreenshot() { String path =
+	 * System.getProperty("user.dir" + "/screenshot/" + System.currentTimeMillis() +
+	 * ".png"); getPage().screenshot(new
+	 * Page.ScreenshotOptions().setPath(Paths.get(path)).setFullPage(true)); return
+	 * path; }
+	 */
 
-	public static String takeScreenshot() {
-		String path = System.getProperty("user.dir" + "/screenshot/" + System.currentTimeMillis() + ".png");
-		getPage().screenshot(new Page.ScreenshotOptions().setPath(Paths.get(path)).setFullPage(true));
-		return path;
+	public static String takeScreenshot_Web() {
+		return takeScreenshot(getPage());
 	}
 
 }

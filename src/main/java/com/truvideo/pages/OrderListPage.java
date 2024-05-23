@@ -9,7 +9,7 @@ import com.truvideo.utility.JavaUtility;
 
 import io.appium.java_client.AppiumDriver;
 
-public class OrderListPage {
+public class OrderListPage extends JavaUtility{
 	private Page page;
 	private AppiumDriver driver;
 
@@ -33,16 +33,15 @@ public class OrderListPage {
 	public static String roNumber;
 
 	public String addRepairOrder() {
-		JavaUtility utility = new JavaUtility();
 		page.click(addRepairOrder_Button);
-		roNumber = "WEB" + utility.getRandomString(5);
+		roNumber = "WEB" + getRandomString(5);
 		page.fill(repairOrderNumber_Field, roNumber);
-		page.fill(firstName_Field, "First" + utility.getRandomString(8));
-		page.fill(lastName_Field, "Last" + utility.getRandomString(8));
+		page.fill(firstName_Field, "First" + getRandomString(8));
+		page.fill(lastName_Field, "Last" + getRandomString(8));
 		page.click(phoneNumber_Field);
-		page.fill(phoneNumber_Field, "781205" + utility.getRandomNumber(4));
+		page.fill(phoneNumber_Field, "781205" + getRandomNumber(4));
 		page.click(emailId_Field);
-		page.fill(emailId_Field, utility.getRandomString(8) + "@gmail.com");
+		page.fill(emailId_Field,getRandomString(8) + "@gmail.com");
 		page.click(save_Button);
 		// Locator row = page.locator(tableRow);
 		// row.locator(":scope", new
@@ -64,6 +63,6 @@ public class OrderListPage {
 		DealerCodePage dp = new DealerCodePage(driver);
 		dp.dealerLogin_ValidCredentials();
 		UserListPage up = new UserListPage(driver);
-		return up.login_verify_created_RO("Sandip Test");
+		return up.login_verify_created_RO(prop.getProperty("MobileUserLogin"));
 	}
 }

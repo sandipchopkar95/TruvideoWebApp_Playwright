@@ -17,6 +17,7 @@
 		<extentreports-version>5.1.1</extentreports-version>
 		<java-client-version>9.2.2</java-client-version>
 		<testng-version>7.10.2</testng-version>
+		<log-4j-verision>2.23.1</log-4j-verision>
 	</properties>
 
 	<dependencies>
@@ -40,6 +41,17 @@
 			<groupId>io.appium</groupId>
 			<artifactId>java-client</artifactId>
 			<version>${java-client-version}</version>
+		</dependency>
+		<!--Loggin dependencies-->
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>${log-4j-verision}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>${log-4j-verision}</version>
 		</dependency>
 	</dependencies>
 
