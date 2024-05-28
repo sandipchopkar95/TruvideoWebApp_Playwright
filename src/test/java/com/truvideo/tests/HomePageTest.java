@@ -55,6 +55,13 @@ public class HomePageTest extends BaseTest {
 		page.goBack();
 	}
 	
+	@Test(priority = 6)
+	public void verify_User_HeaderTab_Working() {
+		String actualTitle = homepage.clickOn_User_Header();
+		Assert.assertEquals(actualTitle, AppConstants.USER_PAGE_TITLE);
+		page.goBack();
+	}
+	
 	@Test(priority = 7)
 	public void verify_Contact_HeaderTab_Working() {
 		String actualTitle = homepage.clickOn_ContactList_Header();

@@ -16,9 +16,8 @@ public class AppConstants {
 	public static final String PROSPECT_PAGE_TITLE ="TruVideo - Prospects";
 	public static final String REMINDER_PAGE_URL="https://rc.truvideo.com/reminder?filterBy=MY_REMINDERS";
 	public static final String TRAINING_PAGE_TITLE="TruVideo - Training";
+	public static final String USER_PAGE_TITLE="TruVideo - Users";
 	public static final String CONTACT_LIST_PAGE_TITLE="TruVideo - Contact List";
-	
-	
 	
 	//Forgot password page
 	public static final String ERROR_MESSAGE_WITHOUT_ENTERING_lOGIN_CREDENTIALS="Cannot pass null or empty values to constructor";

@@ -34,11 +34,6 @@ public class HomePage extends JavaUtility {
 		page.click(repairOrder_Header);
 		return new OrderListPage(page);
 	}
-	
-	public UserPage navigateToUserspage() {
-		page.click(users_Header);
-		return new UserPage(page);
-	}
 
 	public boolean clickOn_Order_MessagesHeader() {
 		navigateToMessageScreen_Order();
@@ -119,13 +114,27 @@ public class HomePage extends JavaUtility {
 		return new TrainingPage(page);
 	}
 
+	public String clickOn_User_Header() {
+		navigateToUserspage();
+		logger.info("Clicked on User Header Tab");
+		return page.title();
+	}
+
+	public UserPage navigateToUserspage() {
+		if (!page.isVisible(users_Header)) {
+			page.click(other_Header);
+		}
+		page.click(users_Header);
+		return new UserPage(page);
+	}
+
 	public String clickOn_ContactList_Header() {
 		navigateToContactList();
 		logger.info("Clicked on Contacts List Header Tab");
 		return page.title();
 	}
 
-	public ContactList navigateToContactList() { 
+	public ContactList navigateToContactList() {
 		if (!page.isVisible(contactList_Header)) {
 			page.click(other_Header);
 		}
