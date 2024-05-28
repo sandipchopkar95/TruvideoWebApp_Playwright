@@ -10,6 +10,7 @@ public class HomePage {
 	}
 
 	private String repairOrder_Header = "a[href='/crud/repair-order']";
+	private String users_Header_Button = "a[href='/organization/tce-users/']";
 
 	public String navigationToOrderList() {
 		navigateToOrderList();
@@ -19,6 +20,11 @@ public class HomePage {
 	public OrderListPage navigateToOrderList() {
 		page.click(repairOrder_Header);
 		return new OrderListPage(page);
+	}
+	
+	public UserPage navigateToUserspage() {
+		page.click(users_Header_Button);
+		return new UserPage(page);
 	}
 
 }
