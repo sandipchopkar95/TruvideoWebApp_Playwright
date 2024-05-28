@@ -21,10 +21,10 @@ public class OrderListPageTest extends BaseTest {
 		String validatedRO_Mobile = orderlistpage.verifyCreatedRO_OnMobile();
 		Assert.assertTrue(validatedRO_Mobile.contains(createdRo_Dashboard));
 	}
-	
+
 	@Test(priority = 2)
 	public void openCreatedRO() {
-		String actualTitle=orderlistpage.openCreatedRO();
+		String actualTitle = orderlistpage.openCreatedRO();
 		Assert.assertEquals(actualTitle, AppConstants.ORDER_DETAILS_PAGE_TITLE);
 	}
 

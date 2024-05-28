@@ -6,7 +6,6 @@ import com.truvideo.factory.AppiumFactory;
 import com.truvideo.mobilepages.DealerCodePage;
 import com.truvideo.mobilepages.UserListPage;
 import com.truvideo.utility.JavaUtility;
-
 import io.appium.java_client.AppiumDriver;
 
 public class OrderListPage extends JavaUtility{

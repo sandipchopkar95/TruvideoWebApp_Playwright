@@ -1,15 +1,14 @@
 package com.truvideo.base;
 
 import java.util.Properties;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
+import org.testng.annotations.*;
 import com.microsoft.playwright.Page;
 import com.truvideo.factory.PlaywrightFactory;
 import com.truvideo.pages.LoginPage;
 
 public class BaseTest {
 	protected PlaywrightFactory pf;
-	protected Page page;
+	public Page page;
 	protected Properties prop;
 	protected LoginPage loginpage;
 

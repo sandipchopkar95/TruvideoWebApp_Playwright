@@ -13,7 +13,6 @@ import org.apache.logging.log4j.Logger;
 import com.microsoft.playwright.Page;
 
 public class JavaUtility {
-
 	public static Properties prop;
 	public Logger logger = LogManager.getLogger(this.getClass().getName());
 	private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
