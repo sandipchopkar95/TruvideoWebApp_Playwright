@@ -4,7 +4,6 @@ import org.testng.Assert;
 import org.testng.annotations.*;
 import com.truvideo.base.BaseTest;
 import com.truvideo.pages.OrderListPage;
-import com.truvideo.constants.AppConstants;
 
 public class OrderListPageTest extends BaseTest {
 	OrderListPage orderlistpage;
@@ -16,16 +15,65 @@ public class OrderListPageTest extends BaseTest {
 	}
 
 	@Test(priority = 1)
-	public void verifyAddRepairOrder() throws Exception {
-		String createdRo_Dashboard = orderlistpage.addRepairOrder();
-		String validatedRO_Mobile = orderlistpage.verifyCreatedRO_OnMobile();
-		Assert.assertTrue(validatedRO_Mobile.contains(createdRo_Dashboard));
+	public void verifyAllAvailableElementsOnROListPage() {
+		Assert.assertTrue(orderlistpage.checkAllAvailableElements_ROListPage());
 	}
 
 	@Test(priority = 2)
-	public void openCreatedRO() {
-		String actualTitle = orderlistpage.openCreatedRO();
-		Assert.assertEquals(actualTitle, AppConstants.ORDER_DETAILS_PAGE_TITLE);
+	public void verify_MyROs_Filter() {
+		Assert.assertTrue(orderlistpage.clickOn_MyROs_Filter());
+	}
+
+	@Test(priority = 3)
+	public void verify_AllOpen_Filter() {
+		Assert.assertTrue(orderlistpage.clickOn_AllOpen_Filter());
+	}
+
+	@Test(priority = 4)
+	public void verify_ForReview_Filter() {
+		Assert.assertTrue(orderlistpage.clickOn_ForReview_Filter());
+	}
+
+	@Test(priority = 5)
+	public void verify_AllClosed_Filter() {
+		Assert.assertTrue(orderlistpage.clickOn_AllClosed_Filter());
+	}
+
+	@Test(priority = 6)
+	public void verify_DealerDropdown_ROListPage() {
+		Assert.assertTrue(orderlistpage.selectDealerFromSelectDealerDropdown());
+	}
+
+	@Test(priority = 7)
+	public void verify_CloseRepairOrderFunction_ROListPage() {
+		Assert.assertTrue(orderlistpage.closeRepairOrder());
+	}
+
+	@Test(priority = 8)
+	public void verify_AllFieldsOn_AddOrderScreen() {
+		Assert.assertTrue(orderlistpage.clickOnAddRepairOrder());
+	}
+
+	@Test(priority = 9)
+	public void verify_RequiredField_AccordingToFleetCustomer() {
+		Assert.assertTrue(orderlistpage.checkfleet_CheckBox_EnableDisabled());
+	}
+
+	@Test(priority = 10)
+	public void verify_AllMandatoryErrorMessage() {
+		Assert.assertTrue(orderlistpage.checkAllMandatoryErrorMessage());
+	}
+
+	@Test(priority = 11)
+	public void verifyAddRepairOrder() throws Exception {
+		String newCreatedRO = orderlistpage.addRepairOrder();
+		String firstROInList = orderlistpage.getFirstROInList();
+		Assert.assertEquals(firstROInList, newCreatedRO);
+	}
+
+	@Test(priority = 12, dependsOnMethods = "verifyAddRepairOrder")
+	public void verifyCreatedROIsVisibleObMobileApp() throws Exception {
+		orderlistpage.verifyCreatedRO_OnMobile();
 	}
 
 }

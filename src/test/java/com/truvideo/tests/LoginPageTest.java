@@ -29,9 +29,8 @@ public class LoginPageTest extends BaseTest {
 	@Test(priority = 4)
 	public void loginWithoutEnteringCredentials_showsErrorMessage() {
 		String actualError_WhenCredentialsNotEntered = loginpage.tryToLoginWithoutEnteringCredentials();
-		//Assert.assertTrue(actualError_WhenCredentialsNotEntered
-		//		.contains(AppConstants.ERROR_MESSAGE_WITHOUT_ENTERING_lOGIN_CREDENTIALS));
-		Assert.assertTrue(false);
+		Assert.assertTrue(actualError_WhenCredentialsNotEntered
+				.contains(AppConstants.ERROR_MESSAGE_WITHOUT_ENTERING_lOGIN_CREDENTIALS));
 	}
 
 	@Test(priority = 5)

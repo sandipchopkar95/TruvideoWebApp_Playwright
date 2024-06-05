@@ -5,6 +5,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.security.SecureRandom;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.Random;
 import org.apache.logging.log4j.LogManager;
@@ -52,4 +57,30 @@ public class JavaUtility {
 		page.screenshot(new Page.ScreenshotOptions().setPath(Paths.get(path)).setFullPage(true));
 		return path;
 	}
+	
+	 public boolean isDateInCurrentWeek(String dateFromList) {
+	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm a", Locale.ENGLISH);
+	        LocalDate givenDate = LocalDate.parse(dateFromList, formatter);
+	        LocalDate now = LocalDate.now();
+	        LocalDate startOfWeek = now.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
+	        LocalDate endOfWeek = startOfWeek.plusDays(6);
+	        return (givenDate.isEqual(startOfWeek) || givenDate.isAfter(startOfWeek)) && 
+	               (givenDate.isEqual(endOfWeek) || givenDate.isBefore(endOfWeek));
+	    }
+	 
+	 public boolean isDateInCurrentMonth(String dateFromList) {
+	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm a", Locale.ENGLISH);
+	        LocalDate givenDate = LocalDate.parse(dateFromList, formatter);
+	        LocalDate now = LocalDate.now();
+	        return givenDate.getYear() == now.getYear() && givenDate.getMonth() == now.getMonth();
+	    }
+	 
+	 public static boolean isDateInRange(String dateFromList, String fromDateStr, String toDateStr) {
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm a", Locale.ENGLISH);
+			LocalDate givenDate = LocalDate.parse(dateFromList, formatter);
+			LocalDate fromDate = LocalDate.parse(fromDateStr, formatter);
+			LocalDate toDate = LocalDate.parse(toDateStr, formatter);
+			return (givenDate.isEqual(fromDate) || givenDate.isAfter(fromDate))
+					&& (givenDate.isEqual(toDate) || givenDate.isBefore(toDate));
+		}
 }
