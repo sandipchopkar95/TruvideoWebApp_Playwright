@@ -49,17 +49,23 @@ public class LoginPage extends JavaUtility {
 	}
 
 	public String tryToLoginWithoutEnteringCredentials() {
-		navigateToHomePage("", "");
+		page.fill(username_Field, "");
+		page.fill(password_Field, "");
+		page.click(logIn_Button);
+		logger.info("Clicked on LogIn button without entering credentials");
 		String errorMessage = page.textContent(errorAlertMessage_Login);
-		logger.info("Clicked on LogIn button without entering login credentials");
+		logger.info("Error message displayed for null credentials as : "+errorMessage);
 		page.locator(close_Button_ErrorAlert).first().click();
 		return errorMessage;
 	}
 
 	public String loginWithInvalidCredentials() {
-		navigateToHomePage("test@gmail.com", "7681234");
-		String errorMessage = page.textContent(errorAlertMessage_Login);
+		page.fill(username_Field, "test9fjr@gmail.com");
+		page.fill(password_Field, "3787hjdsd");
+		page.click(logIn_Button);
 		logger.info("Clicked on LogIn button when entering invalid login credentials");
+		String errorMessage = page.textContent(errorAlertMessage_Login);
+		logger.info("Error message displayed for ivalid credentials as : "+errorMessage);
 		page.locator(close_Button_ErrorAlert).first().click();
 		return errorMessage;
 	}

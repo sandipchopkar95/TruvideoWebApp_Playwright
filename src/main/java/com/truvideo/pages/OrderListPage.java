@@ -263,7 +263,7 @@ public class OrderListPage extends JavaUtility {
 		page.click(myROs_FilterButton);
 		page.click(addRepairOrder_Button);
 		logger.info("Clicked on Add Repair Order Button");
-		page.waitForTimeout(1000);
+		page.waitForURL(url -> url.contains(AppConstants.ADD_ORDER_URL));
 		if (page.isVisible(repairOrderNumber_Field) && page.isVisible(firstName_Field) && page.isVisible(lastName_Field)
 				&& page.isVisible(fleetCheckBox) && page.isVisible(companyName_TextBox)
 				&& page.isVisible(phoneNumber_Field) && page.isVisible(emailId_Field) && page.isVisible(save_Button)) {
@@ -276,33 +276,13 @@ public class OrderListPage extends JavaUtility {
 			return false;
 		}
 	}
-
-	public boolean checkAllMandatoryErrorMessage() {
-		page.click(addRepairOrder_Button);
-		logger.info("Clicked on Add Repair Order button");
-		page.click(save_Button);
-		page.waitForTimeout(2000);
-		logger.info("Clicked on save button without entering any data");
-		if (page.isVisible(repairOrder_MandatoryField) && page.isVisible(firstName_MandatoryField)
-				&& page.isVisible(lastName_MandatoryField)) {
-			logger.info("All Mandatory field warning message displayed");
-			logger.info("Repair order Mandatory field message displayed as: "
-					+ page.textContent(repairOrder_MandatoryField));
-			logger.info(
-					"First Name Mandatory field message displayed as: " + page.textContent(firstName_MandatoryField));
-			logger.info("Last Name Mandatory field message displayed as: " + page.textContent(lastName_MandatoryField));
-			page.click(cancel_Button);
-			return true;
-		} else {
-			logger.info("Something went wrong during validating mandatory error messages");
-			page.click(cancel_Button);
-			return false;
-		}
-	}
-
+	
 	public boolean checkfleet_CheckBox_EnableDisabled() {
+		page.waitForLoadState();
 		page.click(addRepairOrder_Button);
 		logger.info("Clicked on Add Repair Order button");
+		page.waitForURL(url -> url.contains(AppConstants.ADD_ORDER_URL));
+		page.reload();
 		page.click(fleetCheckBox);
 		logger.info("Feet checkbox selected");
 		List<Boolean> requiredLabels = new ArrayList<Boolean>();
@@ -324,16 +304,50 @@ public class OrderListPage extends JavaUtility {
 			requiredLabels.add(true);
 		} else {
 			logger.info("First Name & Last Name are required field label not displayed");
-			page.click(cancel_Button);
+			if (page.isVisible(cancel_Button)) {
+				page.click(cancel_Button);
+			}
 			requiredLabels.add(false);
 		}
-		page.click(cancel_Button);
+		if (page.isVisible(cancel_Button)) {
+			page.click(cancel_Button);
+		}
 		return !requiredLabels.contains(false);
 	}
 
-	public String addRepairOrder() {
+	public boolean checkAllMandatoryErrorMessage() {
+		page.waitForLoadState();
 		page.click(addRepairOrder_Button);
+		page.waitForURL(url -> url.contains(AppConstants.ADD_ORDER_URL));
+		page.reload();
 		logger.info("Clicked on Add Repair Order button");
+		page.click(save_Button);
+		page.waitForTimeout(2000);
+		logger.info("Clicked on save button without entering any data");
+		if (page.isVisible(repairOrder_MandatoryField) && page.isVisible(firstName_MandatoryField)
+				&& page.isVisible(lastName_MandatoryField)) {
+			logger.info("All Mandatory field warning message displayed");
+			logger.info("Repair order Mandatory field message displayed as: "
+					+ page.textContent(repairOrder_MandatoryField));
+			logger.info(
+					"First Name Mandatory field message displayed as: " + page.textContent(firstName_MandatoryField));
+			logger.info("Last Name Mandatory field message displayed as: " + page.textContent(lastName_MandatoryField));
+			page.click(cancel_Button);
+			return true;
+		} else {
+			logger.info("Something went wrong during validating mandatory error messages");
+			page.click(cancel_Button);
+			return false;
+		}
+	}
+
+	public String addRepairOrder() {
+		// page.waitForTimeout(2000);
+		page.click(addRepairOrder_Button);
+		page.waitForURL(url -> url.contains(AppConstants.ADD_ORDER_URL));
+		page.reload();
+		logger.info("Clicked on Add Repair Order button");
+		page.waitForLoadState();
 		newRoNumber = "WEB" + getRandomString(5);
 		page.fill(repairOrderNumber_Field, newRoNumber);
 		logger.info("Repair Order Number filled : " + newRoNumber);

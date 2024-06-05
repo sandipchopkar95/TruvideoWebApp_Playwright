@@ -68,7 +68,7 @@ public class OrderListPageTest extends BaseTest {
 	public void verifyAddRepairOrder() throws Exception {
 		String newCreatedRO = orderlistpage.addRepairOrder();
 		String firstROInList = orderlistpage.getFirstROInList();
-		Assert.assertEquals(newCreatedRO, firstROInList);
+		Assert.assertEquals(firstROInList, newCreatedRO);
 	}
 
 	@Test(priority = 12, dependsOnMethods = "verifyAddRepairOrder")
