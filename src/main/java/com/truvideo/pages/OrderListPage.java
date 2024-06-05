@@ -2,9 +2,7 @@ package com.truvideo.pages;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.testng.asserts.SoftAssert;
-
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.LoadState;
@@ -342,10 +340,8 @@ public class OrderListPage extends JavaUtility {
 	}
 
 	public String addRepairOrder() {
-		// page.waitForTimeout(2000);
 		page.click(addRepairOrder_Button);
 		page.waitForURL(url -> url.contains(AppConstants.ADD_ORDER_URL));
-		page.reload();
 		logger.info("Clicked on Add Repair Order button");
 		page.waitForLoadState();
 		newRoNumber = "WEB" + getRandomString(5);
@@ -367,12 +363,12 @@ public class OrderListPage extends JavaUtility {
 		page.selectOption(technician_Dropdown, prop.getProperty("MobileUserLogin"));
 		page.waitForTimeout(2000);
 		page.click(save_Button);
-		page.waitForTimeout(4000);
+		logger.info("Clicked on Save Button");
 		return newRoNumber;
 	}
 
 	public String getFirstROInList() {
-		page.waitForTimeout(2000);
+		page.waitForSelector(tableRows);
 		String firstRO = page.locator(repairOrders).first().textContent();
 		return firstRO;
 	}

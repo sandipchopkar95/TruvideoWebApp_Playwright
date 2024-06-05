@@ -19,7 +19,7 @@ public class AppiumFactory extends JavaUtility {
 				.setApp("./src/main/resources/MobileApp/RCFlutterApp.apk")
 				.setAutoGrantPermissions(true).setAutomationName("UiAutomator2");
 		driver = new AppiumDriver(service, options);
-		System.out.println("Browser started");
+		System.out.println("Mobile Application launched");
 		return driver;
 	}
 
