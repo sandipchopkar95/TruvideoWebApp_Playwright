@@ -1,6 +1,6 @@
 package com.truvideo.tests;
 
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.*;
 
 import com.truvideo.base.BaseTest;
 import com.truvideo.pages.UserPage;
@@ -14,5 +14,9 @@ public class UserPageTest extends BaseTest {
 				.navigateToUserspage();
 	}
 	
+	@Test
+	public void sasasas() {
+		userPage.searchUser("RahulTest");
+	}
 	
 }
