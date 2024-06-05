@@ -31,9 +31,7 @@ public class HomePage extends JavaUtility {
 	private String dealerGroupsTab = "a[href='/group/']";
 	private String userGroupsTab = "a[href='/organization/usergroups/']";
 	private String savedVideoLibraryTab = "a[href='/crud/saved-video']";
-	private String devicesTab="a[href='/device/']";
-	
-	
+	private String devicesTab = "a[href='/device/']";
 	// search
 	private String search_TextBox = "#search-header";
 	private String search_TextBox_UnderWindow = "#search-keyword";
@@ -83,9 +81,19 @@ public class HomePage extends JavaUtility {
 	private String backAway_Button = "#away-button";
 	private String awayBackMessage_AlertMessage = "div.notifications-button div";
 	private String closeMessageButton = "div.notifications-button a.close";
-
 	// User Account Dropdown
-	private String loginDealerName = "li.account-nav a span span"; // index 0
+	private String logInUserLabel = "li.account-nav a span span:nth-child(3)";
+
+	public String getLoginUserLabel() {
+		return logInUserLabel;
+	}
+
+	private String logInDealerLabel = "li.account-nav a span span:nth-child(1)";
+
+	public String getLoginDealerLabel() {
+		return logInDealerLabel;
+	}
+
 	private String accountDropdownButton = "li.account-nav";
 	private String accountSetting_TextButton = "ul#user-menu-list li a[href='/user-account/'] ";
 	private String helpPage_TextButton = "ul#user-menu-list li a[href='https://truvideo.com/help-page/'] ";
@@ -95,7 +103,7 @@ public class HomePage extends JavaUtility {
 	private String dealerSearch_TextBox = "#dealer-search-form";
 	private String logOut_Button = "#user-menu-list li a[class='logout-a']";
 
-	public String getSearchedDealer(String dealerName) {
+	private String getSearchedDealer(String dealerName) {
 		return "ul#dealerList li a:has-text('" + dealerName + "')";
 	}
 
@@ -270,13 +278,13 @@ public class HomePage extends JavaUtility {
 		logger.info("Clicked on User Group tab");
 		return new UserGroupPage(page);
 	}
-	
+
 	public String clickOnSAvedVideoLibraryHeaderTab() {
 		navigateToSavedVideoLibraryPage();
 		logger.info("Saved Video Library Page is opened : " + page.title());
 		return page.title();
 	}
-	
+
 	public SavedVideoLibraryPage navigateToSavedVideoLibraryPage() {
 		if (!page.isVisible(organization_Header)) {
 			page.click(other_Header);
@@ -288,13 +296,13 @@ public class HomePage extends JavaUtility {
 		logger.info("Clicked on Saved Video Library tab");
 		return new SavedVideoLibraryPage(page);
 	}
-	
+
 	public String clickOnDevicesHeaderTab() {
 		navigateToDevicesPage();
 		logger.info("Devices Page is opened : " + page.title());
 		return page.title();
 	}
-	
+
 	public DevicesPage navigateToDevicesPage() {
 		if (!page.isVisible(system_Header)) {
 			page.click(other_Header);
@@ -306,7 +314,7 @@ public class HomePage extends JavaUtility {
 		logger.info("Clicked on Devices tab");
 		return new DevicesPage(page);
 	}
-	
+
 	public boolean openAndCloseAdvanceSearchWindow() {
 		page.click(search_TextBox);
 		logger.info("Clicked on search text box");
@@ -672,15 +680,15 @@ public class HomePage extends JavaUtility {
 		logger.info("Clicked on user account dropdown button");
 		page.waitForTimeout(2000);
 		page.click(dealerSearch_TextBox);
-		page.keyboard().type(prop.getProperty("dealertoswitch"));
+		page.keyboard().type(prop.getProperty("anotherDealer"));
 		// page.fill(dealerSearch_TextBox, prop.getProperty("dealertoswitch"));
 		page.waitForTimeout(2000);
-		page.locator(getSearchedDealer(prop.getProperty("dealertoswitch"))).first().click();
+		page.locator(getSearchedDealer(prop.getProperty("anotherDealer"))).first().click();
 		logger.info("Clicked on another dealer to switch");
 		List<Boolean> flags = new ArrayList<Boolean>();
-		if (page.locator(loginDealerName).first().textContent().contains(prop.getProperty("dealertoswitch"))) {
+		if (page.locator(logInDealerLabel).textContent().contains(prop.getProperty("anotherDealer"))) {
 			logger.info("User is switched to another dealer and switched dealer is : "
-					+ page.locator(loginDealerName).first().textContent());
+					+ page.locator(logInDealerLabel).textContent());
 			page.waitForLoadState();
 			page.click(accountDropdownButton);
 			logger.info("Clicked on user account dropdown button again : To switch Back");
@@ -693,9 +701,9 @@ public class HomePage extends JavaUtility {
 			logger.info("Clicked on first dealer to switch : To switch Back");
 			flags.add(true);
 			page.waitForLoadState();
-			if (page.locator(loginDealerName).first().textContent().contains(prop.getProperty("dealerused"))) {
+			if (page.locator(logInDealerLabel).textContent().contains(prop.getProperty("dealerused"))) {
 				logger.info("User is switched back to first dealer and switched dealer is : "
-						+ page.locator(loginDealerName).first().textContent());
+						+ page.locator(logInDealerLabel).textContent());
 				flags.add(true);
 			} else {
 				flags.add(false);
@@ -718,6 +726,5 @@ public class HomePage extends JavaUtility {
 		logger.info("Newly Opened Page Closed");
 		return newPageTitle;
 	}
-	
 
 }

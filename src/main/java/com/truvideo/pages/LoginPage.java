@@ -16,7 +16,10 @@ public class LoginPage extends JavaUtility {
 	private String createAccount_ButtonLink = "#register-user";
 	private String forgotPassword_ButtonLink = "#forgot-password";
 	private String errorAlertMessage_Login = "div[class='alert alert-error']";
-	private String close_Button_ErrorAlert="a[class='close']";
+	private String close_Button_ErrorAlert = "a[class='close']";
+
+	public static String logInUsername;
+	public static String logInDealer;
 
 	public boolean checkAllElements_LoginPage() {
 		if (page.isVisible(username_Field) && page.isVisible(password_Field) && page.isVisible(logIn_Button)
@@ -47,18 +50,18 @@ public class LoginPage extends JavaUtility {
 
 	public String tryToLoginWithoutEnteringCredentials() {
 		navigateToHomePage("", "");
-		String errorMessage=page.textContent(errorAlertMessage_Login);
+		String errorMessage = page.textContent(errorAlertMessage_Login);
 		logger.info("Clicked on LogIn button without entering login credentials");
 		page.locator(close_Button_ErrorAlert).first().click();
 		return errorMessage;
 	}
-	
+
 	public String loginWithInvalidCredentials() {
 		navigateToHomePage("test@gmail.com", "7681234");
-		String errorMessage=page.textContent(errorAlertMessage_Login);
+		String errorMessage = page.textContent(errorAlertMessage_Login);
 		logger.info("Clicked on LogIn button when entering invalid login credentials");
 		page.locator(close_Button_ErrorAlert).first().click();
-		return errorMessage; 
+		return errorMessage;
 	}
 
 	public String loginToApplication(String username, String password) {
@@ -74,6 +77,10 @@ public class LoginPage extends JavaUtility {
 		page.fill(username_Field, username);
 		page.fill(password_Field, password);
 		page.click(logIn_Button);
+		logger.info("Navigated to the Home Page");
+		HomePage homePage = new HomePage(page);
+		logInUsername = page.textContent(homePage.getLoginUserLabel());
+		logInDealer = page.textContent(homePage.getLoginDealerLabel());
 		return new HomePage(page);
 	}
 

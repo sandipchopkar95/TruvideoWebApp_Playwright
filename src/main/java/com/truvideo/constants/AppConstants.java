@@ -21,11 +21,11 @@ public class AppConstants {
 	public static final String CHAT_PAGE_TITLE = "TruVideo - Chat v2";
 	public static final String ACCOUNT_SETTING_PAGE_TITLE = "TruVideo - Account Settings";
 	public static final String HELP_PAGE_TITLE = "Help - TruVideo";
-	public static final String DEALERS_PAGE_TITLE="TruVideo - Dealers";
-	public static final String DEALER_GROUP_PAGE_TITLE="TruVideo - Dealer Groups";
-	public static final String USER_GROUP_PAGE_TITLE="TruVideo - User Groups";
-	public static final String SAVED_VIDEO_PAGE_TITLE="TruVideo - Saved Videos";
-	public static final String DEVICES_PAGE_TITLE="TruVideo - Devices";
+	public static final String DEALERS_PAGE_TITLE = "TruVideo - Dealers";
+	public static final String DEALER_GROUP_PAGE_TITLE = "TruVideo - Dealer Groups";
+	public static final String USER_GROUP_PAGE_TITLE = "TruVideo - User Groups";
+	public static final String SAVED_VIDEO_PAGE_TITLE = "TruVideo - Saved Videos";
+	public static final String DEVICES_PAGE_TITLE = "TruVideo - Devices";
 
 	// Forgot password page
 	public static final String ERROR_MESSAGE_WITHOUT_ENTERING_lOGIN_CREDENTIALS = "Cannot pass null or empty values to constructor";
@@ -37,5 +37,9 @@ public class AppConstants {
 	// Forgot Password Page
 	public static final String ERROR_MESSAGE_BLANK_EMAIL_FORGOTPASS = "Invalid Email.";
 	public static final String ERROR_MESSAGE_USER_NOT_AVAILABLE_FOR_EMAIL = "No User Retrieved with Username/Email Provided.";
+	// RO List Page
+	public static final String ERROR_MESSAGE_CLICKONCLOSERO_WHEN_RONOTSELECTED = "Please select repair orders to be closed.";
+	public static final String SUCESS_MESSAGE_RO_CLOSE_WHEN_RO_SELECTED ="Repair orders have been successfully closed";
+
 
 }

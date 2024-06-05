@@ -98,7 +98,7 @@ public class UserListPage {
 		navigateTo_RO_Prospect_ListPage(user);
 		RO_ListPage roListpage = new RO_ListPage(driver);
 		Thread.sleep(3000);
-		return roListpage.getcreatedRO(OrderListPage.roNumber).getAttribute("content-desc");
+		return roListpage.getcreatedRO(OrderListPage.newRoNumber).getAttribute("content-desc");
 	}
 
 	public RO_ListPage navigateTo_RO_Prospect_ListPage(String user) throws Exception {
