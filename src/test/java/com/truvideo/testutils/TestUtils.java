@@ -71,7 +71,7 @@ static ExtentReports extent;
 			email.setSSLOnConnect(true); // Use SSL
 			email.setFrom("sandip.chopkar@5exceptions.com");
 			//email.addTo("rahul.kapse@5exceptions.com");
-			//email.addTo("sandipchopkar789@gmail.com");
+			email.addTo("sandipchopkar789@gmail.com");
 			email.setSubject("Web App Automation Report");
 			email.setMsg("Please find the attached Automation Report For Truvideo Web App.");
 			// Attach the file

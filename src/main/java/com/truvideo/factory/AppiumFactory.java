@@ -16,7 +16,7 @@ public class AppiumFactory extends JavaUtility {
 		startAppiumService();
 		UiAutomator2Options options = new UiAutomator2Options().setPlatformName(prop.getProperty("OSverison"))
 				.setDeviceName(prop.getProperty("DeviceName")).setPlatformVersion(prop.getProperty("platformVersion"))
-				.setApp("C:\\Users\\Badal\\Desktop\\Builds\\RCTruvideoflutter.apk")
+				.setApp("./src/main/resources/MobileApp/RCFlutterApp.apk")
 				.setAutoGrantPermissions(true).setAutomationName("UiAutomator2");
 		driver = new AppiumDriver(service, options);
 		System.out.println("Browser started");
