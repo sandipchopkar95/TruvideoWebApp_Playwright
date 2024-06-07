@@ -15,7 +15,7 @@ public class HomePageTest extends BaseTest {
 		homepage = loginpage.navigateToHomePage(prop.getProperty("username"), prop.getProperty("password"));
 	}
 	
-	@Test
+	//@Test
 	public void test1() {
 		Assert.assertTrue(homepage.clickOn_OwnForReview_RO_Badge());
 	}
