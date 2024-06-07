@@ -14,6 +14,11 @@ public class HomePageTest extends BaseTest {
 	public void homePageSetup() {
 		homepage = loginpage.navigateToHomePage(prop.getProperty("username"), prop.getProperty("password"));
 	}
+	
+	@Test
+	public void test1() {
+		Assert.assertTrue(homepage.clickOn_OwnForReview_RO_Badge());
+	}
 
 	@Test(priority = 1)
 	public void verify_RepairOrder_HeaderTab_Working() {

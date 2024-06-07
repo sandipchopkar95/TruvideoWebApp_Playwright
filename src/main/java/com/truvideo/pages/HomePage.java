@@ -3,6 +3,8 @@ package com.truvideo.pages;
 import java.util.ArrayList;
 import java.util.List;
 import org.testng.asserts.SoftAssert;
+
+import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.truvideo.constants.AppConstants;
 import com.truvideo.factory.PlaywrightFactory;
@@ -32,6 +34,7 @@ public class HomePage extends JavaUtility {
 	private String userGroupsTab = "a[href='/organization/usergroups/']";
 	private String savedVideoLibraryTab = "a[href='/crud/saved-video']";
 	private String devicesTab = "a[href='/device/']";
+
 	// search
 	private String search_TextBox = "#search-header";
 	private String search_TextBox_UnderWindow = "#search-keyword";
@@ -313,6 +316,44 @@ public class HomePage extends JavaUtility {
 		page.click(devicesTab);
 		logger.info("Clicked on Devices tab");
 		return new DevicesPage(page);
+	}
+
+	private String forReviewBadge_SelfRO = "#my-service a";
+	private String forReviewBadge_OtherRO = "#all-service a";
+	private String forReviewBadge_SelfSO = "#my-sales a";
+	private String forReviewBadge_OtherSO = "#all-sales a";
+	private String countOfTotalOrders = "#message-panel div span.records";
+	private String tableRows = "table#repair-order-results tr";
+
+	public boolean clickOn_OwnForReview_RO_Badge() {
+		List<Boolean> flags = new ArrayList<Boolean>();
+		//if(page.isVisible(forReviewBadge_SelfRO)) {
+			logger.info("Badge for video For Review for self RO's is available");
+			String countOnBadge=page.textContent(forReviewBadge_SelfRO);
+			page.click(forReviewBadge_SelfRO);
+			page.waitForURL(url -> url.contains("MY_FOR_REVIEW"));
+			logger.info("Clicked on Badge for video For Review for self RO's");
+			String countLabel=page.textContent(forReviewBadge_SelfRO);
+			Locator tableRow = page.locator(tableRows);
+			int rowCount = tableRow.count();
+			for (int i = 0; i < rowCount - 1; i++) {
+				Locator advisors = tableRow.locator("td:nth-child(5)").nth(i);
+				Locator statuses = tableRow.locator("td:nth-child(10)").nth(i);
+				String advisor = advisors.textContent().trim();
+				String status = statuses.innerText().replaceAll("\\s+", " ");
+				if (countLabel.contains(countOnBadge)&&status.contains("For Review")&&advisor.contains(LoginPage.logInUsername)) {
+					logger.info("The RO is of :" + advisor + " & Contains For Review and  : " + status);
+					flags.add(true);
+				} else {
+					logger.info("The Status of RO :" + advisor + " & Not Contains For Review  : " + status);
+					flags.add(false);
+				}
+			}
+			
+	//	}else {
+	//		flags.clear();
+	//	}
+		return !flags.contains(false);
 	}
 
 	public boolean openAndCloseAdvanceSearchWindow() {
