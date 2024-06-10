@@ -274,7 +274,7 @@ public class OrderListPage extends JavaUtility {
 			return false;
 		}
 	}
-	
+
 	public boolean checkfleet_CheckBox_EnableDisabled() {
 		page.waitForLoadState();
 		page.click(addRepairOrder_Button);
@@ -364,6 +364,7 @@ public class OrderListPage extends JavaUtility {
 		page.waitForTimeout(2000);
 		page.click(save_Button);
 		logger.info("Clicked on Save Button");
+		page.waitForSelector(tableRows);
 		return newRoNumber;
 	}
 
@@ -379,5 +380,14 @@ public class OrderListPage extends JavaUtility {
 		dp.dealerLogin_ValidCredentials();
 		UserListPage up = new UserListPage(driver);
 		return up.login_verify_created_RO(prop.getProperty("MobileUserLogin"));
+	}
+
+	public RepairOrderDetailPage navigateToOrderDetails() {
+		//newRoNumber = addRepairOrder();
+		//Locator tableRow = page.locator(tableRows);
+		//tableRow.locator("td:has-text('" + newRoNumber + "')").first().click();
+		page.locator("table#repair-order-results tr td:nth-child(4)").first().click();
+		page.waitForURL(url-> url.contains("order/service/view"));
+		return new RepairOrderDetailPage(page);
 	}
 }
