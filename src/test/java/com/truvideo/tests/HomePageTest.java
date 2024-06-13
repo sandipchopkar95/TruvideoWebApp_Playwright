@@ -180,4 +180,54 @@ public class HomePageTest extends BaseTest {
 		Assert.assertEquals(actualTitle, AppConstants.HELP_PAGE_TITLE);
 	}
 
+	@Test(priority = 28)
+	public void verify_Self_ForReview_RO_Badge() {
+		Assert.assertTrue(homepage.clickOn_Own_ForReview_RO_Badge());
+	}
+
+	@Test(priority = 29)
+	public void verify_All_ForReview_RO_Badge() {
+		Assert.assertTrue(homepage.clickOn_All_ForReview_RO_Badge());
+	}
+
+	@Test(priority = 30)
+	public void verify_Self_ForReview_SO_Badge() {
+		Assert.assertTrue(homepage.clickOn_Own_ForReview_SO_Badge());
+	}
+
+	@Test(priority = 31)
+	public void verify_All_ForReview_SO_Badge() {
+		Assert.assertTrue(homepage.clickOn_All_ForReview_SO_Badge());
+	}
+
+	@Test(priority = 32)
+	public void verify_Self_Messages_RO_Badge() {
+		Assert.assertTrue(homepage.clickOn_Own_Messages_RO_Badge());
+	}
+
+	@Test(priority = 33)
+	public void verify_All_Messages_RO_Badge() {
+		Assert.assertTrue(homepage.clickOn_All_Messages_RO_Badge());
+	}
+
+	@Test(priority = 34)
+	public void verify_Self_Messages_SO_Badge() {
+		Assert.assertTrue(homepage.clickOn_Own_Messages_SO_Badge());
+	}
+
+	@Test(priority = 35)
+	public void verify_All_Messages_SO_Badge() {
+		Assert.assertTrue(homepage.clickOn_All_Messages_SO_Badge());
+	}
+
+	@Test(priority = 36)
+	public void verify_Self_Reminder_Badge() {
+		Assert.assertTrue(homepage.clickOn_Own_Reminder_Badge());
+	}
+
+	@Test(priority = 37)
+	public void verify_All_Reminder_Badge() {
+		Assert.assertTrue(homepage.clickOn_All_Reminder_Badge());
+	}
+
 }

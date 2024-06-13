@@ -2,7 +2,11 @@ package com.truvideo.pages;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.testng.SkipException;
 import org.testng.asserts.SoftAssert;
+
+import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.truvideo.constants.AppConstants;
 import com.truvideo.factory.PlaywrightFactory;
@@ -22,7 +26,6 @@ public class HomePage extends JavaUtility {
 	private String prospectMessage_Header = "#sales-messages-link";
 	private String reminder_Header = "a[href='/reminder?filterBy=MY_REMINDERS']";
 	private String trainings_Header = "a[href='/trainings']";
-	private String reports_Header = "a[href='#']:has-text('Reports')";
 	private String organization_Header = "a[href='#']:has-text('Organization')";
 	private String system_Header = "a[href='#']:has-text('System')";
 	private String contactList_Header = "a[href='/contact-list']:has-text('Contact List')";
@@ -32,6 +35,7 @@ public class HomePage extends JavaUtility {
 	private String userGroupsTab = "a[href='/organization/usergroups/']";
 	private String savedVideoLibraryTab = "a[href='/crud/saved-video']";
 	private String devicesTab = "a[href='/device/']";
+
 	// search
 	private String search_TextBox = "#search-header";
 	private String search_TextBox_UnderWindow = "#search-keyword";
@@ -50,14 +54,11 @@ public class HomePage extends JavaUtility {
 	}
 
 	private String repairOrderDates = "#repair-order-results tbody tr td:nth-of-type(2)";
-	// private String prospectDates = "#sales-order-results tbody tr
-	// td:nth-of-type(2)";
 	private String dateRange_CheckBox = "//input[@value='date_range']";
 	private String selectDateFrom_1st_Calendar = "div[class='datepicker-days'] tbody tr:nth-of-type(1) td:nth-of-type(2)";
 	private String selectDateFrom_2nd_Calendar = "div[class='datepicker-days'] tbody tr:nth-of-type(6) td:nth-of-type(6)";
 	private String fromDate_TextBox = "#date-range-from";
 	private String toDate_TextBox = "#date-range-to";
-	private String repairOrderRow = "#repair-order-results tbody tr";
 
 	private String getRoNumber(String count) {
 		String getRoNumber = "#repair-order-results tbody tr:nth-of-type(" + count + ") td:nth-of-type(4)";
@@ -81,6 +82,26 @@ public class HomePage extends JavaUtility {
 	private String backAway_Button = "#away-button";
 	private String awayBackMessage_AlertMessage = "div.notifications-button div";
 	private String closeMessageButton = "div.notifications-button a.close";
+	// Badges
+	private String forReviewBadge_SelfRO = "#my-service span.km-tab";
+	private String forReviewBadge_OtherRO = "#all-service span.km-tab";
+	private String forReviewBadge_SelfSO = "#my-sales span.km-tab";
+	private String forReviewBadge_OtherSO = "#all-sales span.km-tab";
+	private String inboundMessageBadge_SelfRO = "#my-service-message span.km-tab";
+	private String inboundMessageBadge_SelfSO = "#my-sales-message span.km-tab";
+	private String inboundMessageBadge_AllRO = "#all-service-message span.km-tab";
+	private String inboundMessageBadge_AllSO = "#all-sales-message span.km-tab";
+	private String countOfTotalOrders = "#message-panel div span.records";
+	private String tableRows = "table#repair-order-results tbody tr";
+	private String tableRows_SO = "table#sales-order-results tbody tr";
+	private String message_MainFrame = "#messages-iframe";
+	private String reminderBadge_SelfRO = "#my-reminders .km-tab";
+	private String reminderBadge_AllRO = "#all-reminders .km-tab";
+
+	private String filterButton(String buttonText) {
+		return "button:has-text('" + buttonText + "')";
+	}
+
 	// User Account Dropdown
 	private String logInUserLabel = "li.account-nav a span span:nth-child(3)";
 
@@ -539,7 +560,7 @@ public class HomePage extends JavaUtility {
 		page.click(search_Button);
 		logger.info("Clicked on search button when text is entered in the text box");
 		page.waitForTimeout(2000);
-		List<String> allTextUnderRO = page.locator(repairOrderRow).allInnerTexts();
+		List<String> allTextUnderRO = page.locator(tableRows).allInnerTexts();
 		List<Boolean> flags = new ArrayList<>();
 		int intCount = 1;
 		for (String textUnderRO : allTextUnderRO) {
@@ -725,6 +746,342 @@ public class HomePage extends JavaUtility {
 		newPage.close();
 		logger.info("Newly Opened Page Closed");
 		return newPageTitle;
+	}
+
+	public boolean clickOn_Own_ForReview_RO_Badge() {
+		page.waitForTimeout(2000);
+		List<Boolean> flags = new ArrayList<>();
+		if (!page.isVisible(forReviewBadge_SelfRO)) {
+			logger.info("Badge for video For Review for self RO's is not available");
+			throw new SkipException("Badge for Review not available, skipping test.");
+		}
+		logger.info("Badge for video For Review for self RO's is available");
+		String countOnBadge = page.textContent(forReviewBadge_SelfRO);
+		page.click(forReviewBadge_SelfRO);
+		page.waitForURL(url -> url.contains("MY_FOR_REVIEW"));
+		logger.info("Clicked on Badge for video For Review for self RO's");
+		String countLabel = page.textContent(countOfTotalOrders).trim();
+		if (countLabel.contains(countOnBadge)) {
+			logger.info("The count " + countOnBadge + " on badge is equal to total count " + countLabel);
+			flags.add(true);
+		} else {
+			logger.info("The count " + countOnBadge + " on badge is not equal to total count " + countLabel);
+			flags.add(false);
+		}
+		Locator tableRow = page.locator(tableRows);
+		int rowCount = tableRow.count();
+		for (int i = 0; i < rowCount; i++) {
+			Locator advisors = tableRow.locator("td:nth-child(5)").nth(i);
+			Locator statuses = tableRow.locator("td:nth-child(10)").nth(i);
+			String advisor = advisors.textContent().trim();
+			String status = statuses.innerText().replaceAll("\\s+", " ");
+			if (status.contains("For Review") && advisor.contains(LoginPage.logInUsername)) {
+				logger.info("The RO is of :" + advisor + " & Contains status  : " + status);
+				flags.add(true);
+			} else {
+				logger.info("The RO is of :" + advisor + " & Contains status  : " + status);
+				flags.add(false);
+			}
+		}
+		return !flags.contains(false);
+	}
+
+	public boolean clickOn_All_ForReview_RO_Badge() {
+		page.waitForTimeout(2000);
+		List<Boolean> flags = new ArrayList<>();
+		if (!page.isVisible(forReviewBadge_OtherRO)) {
+			logger.info("Badge for video For Review for All RO's is not available");
+			throw new SkipException("Badge for All For Review not available, skipping test.");
+		}
+		logger.info("Badge for video For Review for all RO's is available");
+		String countOnBadge = page.textContent(forReviewBadge_OtherRO);
+		page.click(forReviewBadge_OtherRO);
+		page.waitForURL(url -> url.contains("ALL_FOR_REVIEW"));
+		logger.info("Clicked on Badge for video For Review for all RO's");
+		String countLabel = page.textContent(countOfTotalOrders).trim();
+		if (countLabel.contains(countOnBadge)) {
+			logger.info("The count " + countOnBadge + " on badge is equal to total count " + countLabel);
+			flags.add(true);
+		} else {
+			logger.info("The count " + countOnBadge + " on badge is not equal to total count " + countLabel);
+			flags.add(false);
+		}
+		Locator tableRow = page.locator(tableRows);
+		int rowCount = tableRow.count();
+		for (int i = 0; i < rowCount; i++) {
+			Locator statuses = tableRow.locator("td:nth-child(10)").nth(i);
+			String status = statuses.innerText().replaceAll("\\s+", " ");
+			if (status.contains("For Review")) {
+				logger.info("The RO in the list Contains status  : " + status);
+				flags.add(true);
+			} else {
+				logger.info("The RO in the list Contains status  : " + status);
+				flags.add(false);
+			}
+		}
+		return !flags.contains(false);
+	}
+
+	public boolean clickOn_Own_ForReview_SO_Badge() {
+		page.waitForTimeout(2000);
+		List<Boolean> flags = new ArrayList<>();
+		if (!page.isVisible(forReviewBadge_SelfSO)) {
+			logger.info("Badge for video For Review for self SO's is not available");
+			throw new SkipException("Badge for Review not available, skipping test.");
+		}
+		logger.info("Badge for video For Review for self SO's is available");
+		String countOnBadge = page.textContent(forReviewBadge_SelfSO);
+		page.click(forReviewBadge_SelfSO);
+		page.waitForURL(url -> url.contains("MY_FOR_REVIEW"));
+		logger.info("Clicked on Badge for video For Review for self SO's");
+		String countLabel = page.textContent(countOfTotalOrders).trim();
+		if (countLabel.contains(countOnBadge)) {
+			logger.info("The count " + countOnBadge + " on badge is equal to total count " + countLabel);
+			flags.add(true);
+		} else {
+			logger.info("The count " + countOnBadge + " on badge is not equal to total count " + countLabel);
+			flags.add(false);
+		}
+		Locator tableRow = page.locator(tableRows_SO);
+		int rowCount = tableRow.count();
+		for (int i = 0; i < rowCount; i++) {
+			Locator salesAgents = tableRow.locator("td:nth-child(4)").nth(i);
+			Locator statuses = tableRow.locator("td:nth-child(9)").nth(i);
+			String salesAgent = salesAgents.textContent().trim();
+			String status = statuses.innerText().replaceAll("\\s+", " ");
+			if (status.contains("For Review") && salesAgent.contains(LoginPage.logInUsername)) {
+				logger.info("The SO is of :" + salesAgent + " & Contains status  : " + status);
+				flags.add(true);
+			} else {
+				logger.info("The SO is of :" + salesAgent + " & Contains status  : " + status);
+				flags.add(false);
+			}
+		}
+		return !flags.contains(false);
+	}
+
+	public boolean clickOn_All_ForReview_SO_Badge() {
+		page.waitForTimeout(2000);
+		List<Boolean> flags = new ArrayList<>();
+		if (!page.isVisible(forReviewBadge_OtherSO)) {
+			logger.info("Badge for video For Review for All SO's is not available");
+			throw new SkipException("Badge for All For Review not available, skipping test.");
+		}
+		logger.info("Badge for video For Review for all SO's is available");
+		String countOnBadge = page.textContent(forReviewBadge_OtherSO);
+		page.click(forReviewBadge_OtherSO);
+		page.waitForURL(url -> url.contains("ALL_FOR_REVIEW"));
+		logger.info("Clicked on Badge for video For Review for all SO's");
+		String countLabel = page.textContent(countOfTotalOrders).trim();
+		if (countLabel.contains(countOnBadge)) {
+			logger.info("The count " + countOnBadge + " on badge is equal to total count " + countLabel);
+			flags.add(true);
+		} else {
+			logger.info("The count " + countOnBadge + " on badge is not equal to total count " + countLabel);
+			flags.add(false);
+		}
+		Locator tableRow = page.locator(tableRows_SO);
+		int rowCount = tableRow.count();
+		for (int i = 0; i < rowCount; i++) {
+			Locator statuses = tableRow.locator("td:nth-child(9)").nth(i);
+			String status = statuses.innerText().replaceAll("\\s+", " ");
+			if (countLabel.contains(countOnBadge) && status.contains("For Review")) {
+				logger.info("The SO in the list Contains status  : " + status);
+				flags.add(true);
+			} else {
+				logger.info("The SO in the list Contains status  : " + status);
+				flags.add(false);
+			}
+		}
+		return !flags.contains(false);
+	}
+
+	public boolean clickOn_Own_Messages_RO_Badge() {
+		page.waitForTimeout(2000);
+		List<Boolean> flags = new ArrayList<>();
+		if (!page.isVisible(inboundMessageBadge_SelfRO)) {
+			logger.info("Badge for Self RO's Messages is not available");
+			throw new SkipException("Badge for Self Messages not available, skipping test.");
+		}
+		logger.info("Badge for Self RO's Messages is available");
+		page.click(inboundMessageBadge_SelfRO);
+		page.waitForURL(url -> url.contains("filterBy=My+Messages"));
+		logger.info("Clicked on Badge for Self RO's Messages");
+		String isMyButtonSelected = page.frameLocator(message_MainFrame).locator(filterButton("My"))
+				.getAttribute("aria-selected");
+		String isActiveButtonSelected = page.frameLocator(message_MainFrame).locator(filterButton("Active"))
+				.getAttribute("aria-selected");
+		if (isMyButtonSelected.equals("true")) {
+			logger.info("My Filter is selected on message screen");
+			flags.add(true);
+		} else {
+			logger.info("My Filter is not selected on message screen");
+			flags.add(false);
+		}
+		if (isActiveButtonSelected.equals("true")) {
+			logger.info("Active Filter is selected on message screen");
+			flags.add(true);
+		} else {
+			logger.info("Active Filter is not selected on message screen");
+			flags.add(false);
+		}
+		String isSMSButtonSelected = page.frameLocator(message_MainFrame).locator(filterButton("SMS"))
+				.getAttribute("aria-selected");
+		logger.info(isSMSButtonSelected + " SMS ");
+		return !flags.contains(false);
+	}
+
+	public boolean clickOn_All_Messages_RO_Badge() {
+		page.waitForTimeout(4000);
+		List<Boolean> flags = new ArrayList<>();
+		if (!page.isVisible(inboundMessageBadge_AllRO)) {
+			logger.info("Badge for All RO's Messages is not available");
+			throw new SkipException("Badge for All Messages not available, skipping test.");
+		}
+		logger.info("Badge for All RO's Messages is available");
+		page.click(inboundMessageBadge_AllRO);
+		page.waitForURL(url -> url.contains("filterBy=All+Open"));
+		logger.info("Clicked on Badge for All RO's Messages");
+		String isMyButtonSelected = page.frameLocator(message_MainFrame).locator(filterButton("My"))
+				.getAttribute("aria-selected");
+		String isActiveButtonSelected = page.frameLocator(message_MainFrame).locator(filterButton("Active"))
+				.getAttribute("aria-selected");
+		if (isMyButtonSelected.equals("false")) {
+			logger.info("My Filter is not selected on message screen");
+			flags.add(true);
+		} else {
+			logger.info("My Filter is selected on message screen");
+			flags.add(false);
+		}
+		if (isActiveButtonSelected.equals("true")) {
+			logger.info("Active Filter is selected on message screen");
+			flags.add(true);
+		} else {
+			logger.info("Active Filter is not selected on message screen");
+			flags.add(false);
+		}
+		return !flags.contains(false);
+	}
+
+	public boolean clickOn_Own_Messages_SO_Badge() {
+		page.waitForTimeout(4000);
+		List<Boolean> flags = new ArrayList<>();
+		if (!page.isVisible(inboundMessageBadge_SelfSO)) {
+			logger.info("Badge for Self SO's Messages is not available");
+			throw new SkipException("Badge for Self So Messages not available, skipping test.");
+		}
+		logger.info("Badge for Self SO's Messages is available");
+		page.click(inboundMessageBadge_SelfSO);
+		page.waitForURL(url -> url.contains("filterBy=My+Messages"));
+		logger.info("Clicked on Badge for Self SO's Messages");
+		String isMyButtonSelected = page.frameLocator(message_MainFrame).locator(filterButton("My"))
+				.getAttribute("aria-selected");
+		String isActiveButtonSelected = page.frameLocator(message_MainFrame).locator(filterButton("Active"))
+				.getAttribute("aria-selected");
+		if (isMyButtonSelected.equals("true")) {
+			logger.info("My Filter is selected on message screen");
+			flags.add(true);
+		} else {
+			logger.info("My Filter is not selected on message screen");
+			flags.add(false);
+		}
+		if (isActiveButtonSelected.equals("true")) {
+			logger.info("Active Filter is selected on message screen");
+			flags.add(true);
+		} else {
+			logger.info("Active Filter is not selected on message screen");
+			flags.add(false);
+		}
+		return !flags.contains(false);
+	}
+
+	public boolean clickOn_All_Messages_SO_Badge() {
+		page.waitForTimeout(4000);
+		List<Boolean> flags = new ArrayList<>();
+		if (!page.isVisible(inboundMessageBadge_AllSO)) {
+			logger.info("Badge for All SO's Messages is not available");
+			throw new SkipException("Badge for All So Messages not available, skipping test.");
+		}
+		logger.info("Badge for All SO's Messages is available");
+		page.click(inboundMessageBadge_AllSO);
+		page.waitForURL(url -> url.contains("filterBy=All+Open"));
+		logger.info("Clicked on Badge for All SO's Messages");
+		String isMyButtonSelected = page.frameLocator(message_MainFrame).locator(filterButton("My"))
+				.getAttribute("aria-selected");
+		String isActiveButtonSelected = page.frameLocator(message_MainFrame).locator(filterButton("Active"))
+				.getAttribute("aria-selected");
+		if (isMyButtonSelected.equals("false")) {
+			logger.info("My Filter is not selected on message screen");
+			flags.add(true);
+		} else {
+			logger.info("My Filter is selected on message screen");
+			flags.add(false);
+		}
+		if (isActiveButtonSelected.equals("true")) {
+			logger.info("Active Filter is selected on message screen");
+			flags.add(true);
+		} else {
+			logger.info("Active Filter is not selected on message screen");
+			flags.add(false);
+		}
+		return !flags.contains(false);
+	}
+
+	public boolean clickOn_Own_Reminder_Badge() {
+		page.waitForTimeout(4000);
+		List<Boolean> flags = new ArrayList<>();
+		if (!page.isVisible(reminderBadge_SelfRO)) {
+			logger.info("Badge for self Reminder is not available");
+			throw new SkipException("Badge for self Reminder not available, skipping test.");
+		}
+		logger.info("Badge for Self reminder is available");
+		String countOnBadge = page.textContent(reminderBadge_SelfRO);
+		page.click(reminderBadge_SelfRO);
+		page.waitForURL(url -> url.contains("filterBy=MY_REMINDERS"));
+		logger.info("Clicked on Badge for Self Reminder");
+		String countLabel = page.textContent(countOfTotalOrders).trim();
+		if (countLabel.contains(countOnBadge)) {
+			logger.info("The count " + countOnBadge + " on badge is equal to total count " + countLabel);
+			flags.add(true);
+		} else {
+			logger.info("The count " + countOnBadge + " on badge is not equal to total count " + countLabel);
+			flags.add(false);
+		}
+		Locator tableRow = page.locator(tableRows);
+		int rowCount = tableRow.count();
+		for (int i = 0; i < rowCount; i++) {
+			Locator advisors = tableRow.locator("td:nth-child(5)").nth(i);
+			String advisor = advisors.innerText().trim();
+			if (advisor.contains(LoginPage.logInUsername)) {
+				logger.info("The RO in the list is of Login User  : " + advisor);
+				flags.add(true);
+			} else {
+				logger.info("The RO in the list is not of Login User  : " + advisor);
+				flags.add(false);
+			}
+		}
+		return !flags.contains(false);
+	}
+
+	public boolean clickOn_All_Reminder_Badge() {
+		page.waitForTimeout(4000);
+		if (!page.isVisible(reminderBadge_AllRO)) {
+			logger.info("Badge for All Reminder is not available");
+			throw new SkipException("Badge for All Reminder not available, skipping test.");
+		}
+		logger.info("Badge for All reminder is available");
+		String countOnBadge = page.textContent(reminderBadge_AllRO);
+		page.click(reminderBadge_AllRO);
+		page.waitForURL(url -> url.contains("filterBy=ALL_REMINDERS_OVERDUE"));
+		logger.info("Clicked on Badge for All Reminder");
+		String countLabel = page.textContent(countOfTotalOrders).trim();
+		if (countLabel.contains(countOnBadge)) {
+			logger.info("The count " + countOnBadge + " on badge is equal to total count " + countLabel);
+			return true;
+		} else {
+			logger.info("The count " + countOnBadge + " on badge is not equal to total count " + countLabel);
+			return false;
+		}
 	}
 
 }
