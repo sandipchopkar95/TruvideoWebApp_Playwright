@@ -41,6 +41,7 @@ public class AppConstants {
 	public static final String ERROR_MESSAGE_CLICKONCLOSERO_WHEN_RONOTSELECTED = "Please select repair orders to be closed.";
 	public static final String SUCESS_MESSAGE_RO_CLOSE_WHEN_RO_SELECTED ="Repair orders have been successfully closed";
 	public static final String ADD_ORDER_URL="https://rc.truvideo.com/crud/repair-order/0";
-
+    //Users Page
+	public static final String USER_SAVED_MESSAGE = "Record has been successfully added";
 
 }

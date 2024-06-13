@@ -13,10 +13,14 @@ public class UserPageTest extends BaseTest {
 		userPage = loginpage.navigateToHomePage(prop.getProperty("username"), prop.getProperty("password"))
 				.navigateToUserspage();
 	}
-	
+
+	@Test
+	public void verifyRequiredFieldinAddUser() throws InterruptedException {
+		userPage.addUser("Service Dashboard", "Kenility Store");
+	}
+
 	@Test
 	public void sasasas() {
 		userPage.searchUser("RahulTest");
 	}
-	
 }
