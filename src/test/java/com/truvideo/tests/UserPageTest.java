@@ -22,5 +22,6 @@ public class UserPageTest extends BaseTest {
 	@Test
 	public void sasasas() {
 		userPage.searchUser("RahulTest");
+		
 	}
 }
