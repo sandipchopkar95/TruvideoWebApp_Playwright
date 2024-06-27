@@ -20,9 +20,60 @@ public class RepairOrderDetailPageTest extends BaseTest {
 	public void verifyAllAvailableElementsOnOrderDetails() {
 		Assert.assertTrue(repairOrderPage.checkAllMandatoryFields_ForNewRO());
 	}
-	
+
 	@Test(priority = 2)
-	public void verifySendToCustomerFunction() {
-		repairOrderPage.sendVideoToCustomer();
+	public void verifyAddMediaFunction_FirstVideo() {
+		repairOrderPage.addVideoToOrder();
 	}
+
+	@Test(priority = 3)
+	public void verifySendToCustomer_ForFirstVideo() {
+		repairOrderPage.sendVideoToCustomer("WhatsApp");
+	}
+
+	@Test(priority = 4)
+	public void verifyAddMediaFunction_SecondVideo() {
+		repairOrderPage.addVideoToOrder();
+	}
+
+	@Test(priority = 5)
+	public void verifySendToCustomer_ForSecondVideo() {
+		repairOrderPage.sendVideoToCustomer("SMS");
+	}
+
+	@Test(priority = 6)
+	public void verifyViewedStatus() {
+		repairOrderPage.checkStatus_OnVideoWatch();
+	}
+
+	@Test(priority = 7)
+	public void verifyVariousActivityOfEstimate() {
+		repairOrderPage.activitiesOfCreateEstimateWindow();
+	}
+
+	@Test(priority = 8)
+	public void verifySendEstimateFunction() {
+		repairOrderPage.sendEstimate("SMS");
+	}
+
+	@Test(priority = 9)
+	public void verifyResendEstimateFunction() {
+		repairOrderPage.resendEstimate("WhatsApp");
+	}
+	
+	@Test(priority = 10)
+	public void verifyEstimateConfirmationFunction() {
+		repairOrderPage.estimateConfirmation();
+	}
+
+	@Test(priority = 11)
+	public void verifyPaymentFunction() {
+		repairOrderPage.createPayment("WhatsApp");
+	}
+
+	@Test(priority = 12)
+	public void verifyPaymentResendFunction() {
+		repairOrderPage.resendPayment("SMS");
+	}
+
 }
