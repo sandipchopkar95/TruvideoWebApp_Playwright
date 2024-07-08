@@ -16,12 +16,21 @@ public class UserPageTest extends BaseTest {
 
 	@Test
 	public void verifyRequiredFieldinAddUser() throws InterruptedException {
-		userPage.addUser("Service Dashboard", "Kenility Store");
+		userPage.addNewUser("Service Dashboard", "Kenility Store");
 	}
 
 	@Test
-	public void sasasas() {
-		userPage.searchUser("RahulTest");
-		
+	public void updatePasswordNewUser() throws InterruptedException {
+		userPage.updateUserPassword("Service Dashboard", "Kenility Store", "Test123");
+	}
+
+	@Test
+	public void loginwithNewUser() throws InterruptedException {
+		userPage.loginwithNewUser("Service Dashboard", "Kenility Store", "Test123", "updatedpassword");
+	}
+	
+	@Test
+	public void verifyUserStatus() throws InterruptedException {
+		userPage.userStatus();
 	}
 }

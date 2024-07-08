@@ -5,11 +5,15 @@ import java.util.List;
 
 import org.testng.asserts.SoftAssert;
 
+import com.microsoft.playwright.Keyboard;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.sun.tools.sjavac.Log;
 import com.truvideo.constants.AppConstants;
+import com.truvideo.factory.PlaywrightFactory;
 import com.truvideo.utility.JavaUtility;
+
+import net.bytebuddy.asm.Advice.Enter;
 
 public class UserPage extends JavaUtility {
 	private Page page;
@@ -55,13 +59,42 @@ public class UserPage extends JavaUtility {
 	private String emptyEmailAddressAlert = "small:has-text('Email Address is a required field.')";
 	private String alredyExistsEmail = "span small";
 	private String topRightCornerNotification = "div.notifications";
+	String uniqueFirstname;
+	private String editUser = ".approved-user-action a.edit-action";
+	private String deactivateUserButton = "#deactivate-user-button";
+	private String updateUserButton = "#update-password-button";
+	private String saveandInviteUserButton = "#save-and-invite-button";
+	private String updateUserText = "h4.ot3-update";
+	private String backButton = "#temp-page-title-back";
+	private String labelpasswordField = "label[for='credential.newPassword']";
+	private String labelconfirmPasswordField = "label[for='credential.confirmPassword']";
+	private String passwordField = "input[name='credential.newPassword']";
+	private String confirmPasswordField = "input[name='credential.confirmPassword']";
+	private String invalidPasswordicon = "#validate-password-not-ok";
+	private String confirmInvalidPasswordicon = "#validate-confirm-password-ok";
+	private String confirmInvalidPasswordtext = "span.help-inline";
+
+	private String password_TextBox = "#newPassword";
+	private String confirmNewPassword_TextBox = "#confirmPassword";
+	private String submitButton = "#save-user";
+	private String updatePasswordPageLabelText = "h4";
+	private String updatePasswordRequiredLabel = ".alert-error";
+	private String PasswordUpdatedLabelonLoginPage = "#login-status";
+	private String userDeactivateStatus = ".deactivate-user";
+	private String userActivateStatus = ".activate-user";
+	private String activeStatusbutton = "label.btn:has-text('Active')";
+	private String inActiveStatusButton = "label.btn:has-text('Inactive')";
+	
+
+	String userEmailID;
+	String usernewDummyPassword;
 
 	public String getsearchedUser(String username) {
 		String username1 = "#user-results tbody tr td:nth-child(3) p:text('" + username + "')";
 		return username1;
 	}
 
-	public void addUser(String roles, String dealer) throws InterruptedException {
+	public void addNewUser(String roles, String dealer) throws InterruptedException {
 		page.click(addUser_button);
 		logger.info("Clicked on Add User Button");
 		page.click(saveButton);
@@ -84,17 +117,17 @@ public class UserPage extends JavaUtility {
 		}
 		softAssert.assertTrue(!flags.contains(false), "Error Alert message when Role & Dealer is not entered");
 		flags.clear();
-		Thread.sleep(3000);
+		page.waitForTimeout(3000);
 		page.click(selectRoles_option);
 		page.fill(selectRoles_option, roles);
 		page.click(getRoles(roles));
 
-		Thread.sleep(5000);
+		page.waitForTimeout(4000);
 
 		page.click(selectDealer_option);
 		page.fill(selectDealer_option, dealer);
 		page.click(getDealer(dealer));
-		Thread.sleep(5000);
+		page.waitForTimeout(5000);
 
 		if (page.textContent(emptyFirstNameAlert).contains("First Name is a required field..")) {
 			logger.info("Alert message for Role Displayed");
@@ -121,9 +154,9 @@ public class UserPage extends JavaUtility {
 		softAssert.assertTrue(!flags.contains(false),
 				"Error Alert message when Role,Dealer,First Name,Last Name and Email is not entered");
 
-		Thread.sleep(2000);
+		page.waitForTimeout(4000);
 		page.click(firstName);
-		page.fill(firstName, "Test Automation");
+		page.fill(firstName, getRandomString(5) + "Test Automation");
 		logger.info("First name is Added");
 		page.click(lastName);
 		page.fill(lastName, "User");
@@ -133,7 +166,9 @@ public class UserPage extends JavaUtility {
 		logger.info("Email address is Added");
 		page.click(saveButton);
 		logger.info("Clicked on Save button");
-		Thread.sleep(10000);
+		page.waitForTimeout(9000);
+		uniqueFirstname = page.inputValue(firstName);
+		logger.info("Updated First Name " + uniqueFirstname);
 
 		softAssert.assertTrue(page.textContent(alredyExistsEmail).contains("is already registered."),
 				"Verify Existing users email error message");
@@ -141,8 +176,9 @@ public class UserPage extends JavaUtility {
 			page.fill(emailAddress, getRandomString(5) + "@gmail.com");
 		}
 		logger.info(page.inputValue(emailAddress));
+		userEmailID = page.inputValue(emailAddress);
 		page.click(saveButton);
-		Thread.sleep(10000);
+		page.waitForTimeout(9000);
 
 		String topRightCornerNotificationPopup = page.textContent(topRightCornerNotification);
 		logger.info(topRightCornerNotificationPopup);
@@ -151,7 +187,125 @@ public class UserPage extends JavaUtility {
 		} else {
 			logger.info("Getting error to add New User ");
 		}
+//return uniqueFirstname;
+	}
 
+	public void updateUserPassword(String roles, String dealer, String password) throws InterruptedException {
+		addNewUser(roles, dealer);
+		page.fill(userSearchbox, uniqueFirstname);
+		page.waitForTimeout(9000);
+		logger.info("Searched with Latest user created");
+		page.click(searchButton);
+		page.waitForTimeout(9000);
+		logger.info("Clicked on search button - Associated users are displaying");
+		page.click(editUser);
+		if (page.isVisible(updateUserText)) {
+			logger.info("User is on Update userpage");
+		} else {
+			logger.info("Update userpage is not opened correctly");
+		}
+
+		page.waitForTimeout(6000);
+		SoftAssert softAssert = new SoftAssert();
+		if (firstName.contains(uniqueFirstname)) {
+			logger.info("Successfully open newly created user for Editing/updating password");
+		} else {
+			logger.info("Mismatch between selected user and opened  user");
+		}
+		softAssert.assertTrue(firstName.contains(uniqueFirstname), "Successfully edited searched user");
+
+		page.click(backButton);
+		logger.info("Successfully navigated on userpage through back button");
+		page.click(editUser);
+		logger.info("Again Successfully edited searched user");
+		page.isVisible(deactivateUserButton);
+		logger.info("Deactivate User button is displayed");
+		page.click(updateUserButton);
+		logger.info("Clicked on Update User button");
+		page.waitForTimeout(4000);
+		page.click(passwordField);
+		page.fill(passwordField, password);
+		page.click(confirmPasswordField);
+		page.fill(confirmPasswordField, "text22");
+		if (passwordField.equals(confirmPasswordField)) {
+			logger.info("Confirm password is matched with password field");
+		} else {
+			logger.info("Confirm password is NOT matched with password field");
+		}
+		softAssert.assertTrue(passwordField.equals(confirmPasswordField),
+				"Password and Confirmed password both values are same");
+
+		page.fill(confirmPasswordField, "");
+		page.waitForTimeout(3000);
+		page.fill(confirmPasswordField, password);
+		usernewDummyPassword = page.inputValue(confirmPasswordField);
+		logger.info(usernewDummyPassword + "Confirm password is matched with password field");
+		logger.info("Confirm password is matched with password field");
+		page.click(saveButton);
+		logger.info("Password updated for new user and clicked on Save button");
+		page.waitForTimeout(6000);
+
+	}
+
+	public void loginwithNewUser(String roles, String dealer, String password, String newpassword)
+			throws InterruptedException {
+		updateUserPassword(roles, dealer, password);
+		page.waitForTimeout(6000);
+		Page newBrowserPage = PlaywrightFactory.getBrowser().newContext().newPage();
+		newBrowserPage.navigate("https://rc.truvideo.com/");
+		logger.info("navigated to the url" + newBrowserPage.url());
+		newBrowserPage.waitForTimeout(6000);
+		LoginPage loginPage = new LoginPage(newBrowserPage);
+		//HomePage homePage = new HomePage(newBrowserPage);
+		loginPage.navigateToUpdatePassword(newBrowserPage, userEmailID, usernewDummyPassword);
+		logger.info("navigated to the update password page after putting new username and password value");
+		newBrowserPage.waitForTimeout(2000);
+		newBrowserPage.click(submitButton);
+		logger.info("Without adding password value clicked on Submit button");
+		if (newBrowserPage.isVisible(updatePasswordRequiredLabel)) {
+			logger.info("Without adding password value clicked on Submit button and its showing error message");
+		} else {
+			logger.info("Password required field label is not showing");
+		}
+		newBrowserPage.fill(password_TextBox, newpassword);
+		logger.info("password value is filled");
+		newBrowserPage.fill(confirmNewPassword_TextBox, newpassword);
+		logger.info("Both Password and Confirm Password field is filled");
+		newBrowserPage.click(submitButton);
+		newBrowserPage.waitForTimeout(3000);
+		if (newBrowserPage.isVisible(PasswordUpdatedLabelonLoginPage)) {
+			logger.info("User is navigated on Login page and Pawword updated label is displayed");
+		} else {
+			logger.info("Password is not updated and User is unable to navigate on Login page");
+		}
+		loginPage.navigateToHomePage(userEmailID, newpassword);
+		newBrowserPage.waitForTimeout(4000);
+		logger.info("Login User is " + LoginPage.logInUsername);
+		newBrowserPage.waitForTimeout(6000);
+		newBrowserPage.close();
+	}
+	
+	public void userStatus()
+	{
+		page.waitForTimeout(9000);
+		page.fill(userSearchbox, "CzmyFTest Automation");
+		page.waitForTimeout(9000);
+		logger.info("Searched with Latest user created");
+		page.click(searchButton);
+		page.waitForTimeout(9000);
+		page.click(userDeactivateStatus);
+		logger.info("Successfully deactivated user");
+		page.waitForTimeout(9000);
+		page.waitForCondition(()->page.isVisible(inActiveStatusButton));
+		page.click(inActiveStatusButton);
+		logger.info("User is clicked on InActive status button");
+		page.waitForTimeout(3000);
+		page.click(userActivateStatus);
+		logger.info("Again Successfully Activated user");
+		page.waitForTimeout(2000);
+		page.click(activeStatusbutton);
+		logger.info("Again Clicked on Active status button and Verified user is present in Active filter");
+		
 	}
 
 	public void searchUser(String usernametoSearch) {

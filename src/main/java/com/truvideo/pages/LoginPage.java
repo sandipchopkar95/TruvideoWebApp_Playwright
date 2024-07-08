@@ -81,13 +81,22 @@ public class LoginPage extends JavaUtility {
 
 	public HomePage navigateToHomePage(String username, String password) {
 		page.fill(username_Field, username);
+		logger.info("Entered User Name"+username);
 		page.fill(password_Field, password);
+		logger.info("Entered Password"+password);
 		page.click(logIn_Button);
 		logger.info("Navigated to the Home Page");
 		HomePage homePage = new HomePage(page);
 		logInUsername = page.textContent(homePage.getLoginUserLabel());
 		logInDealer = page.textContent(homePage.getLoginDealerLabel());
 		return new HomePage(page);
+	}
+	
+	public void navigateToUpdatePassword(Page newPage,String username, String password) {
+		newPage.fill(username_Field, username);
+		newPage.fill(password_Field, password);
+		newPage.click(logIn_Button);
+		logger.info("Navigated to the Update Password Screen");
 	}
 
 	public SignUpPage navigateToSignUpPage() {
