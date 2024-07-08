@@ -3,7 +3,6 @@ package com.truvideo.tests;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
 import com.truvideo.base.BaseTest;
 import com.truvideo.pages.RepairOrderDetailPage;
 
@@ -48,6 +47,7 @@ public class RepairOrderDetailPageTest extends BaseTest {
 
 	@Test(priority = 7)
 	public void verifyVariousActivityOfEstimate() {
+		page.reload();
 		repairOrderPage.activitiesOfCreateEstimateWindow();
 	}
 
@@ -60,20 +60,26 @@ public class RepairOrderDetailPageTest extends BaseTest {
 	public void verifyResendEstimateFunction() {
 		repairOrderPage.resendEstimate("WhatsApp");
 	}
-	
+
 	@Test(priority = 10)
 	public void verifyEstimateConfirmationFunction() {
-		repairOrderPage.estimateConfirmation();
+		repairOrderPage.estimateConfirmation("WhatsApp");
 	}
 
 	@Test(priority = 11)
 	public void verifyPaymentFunction() {
+		page.reload();
 		repairOrderPage.createPayment("WhatsApp");
 	}
 
 	@Test(priority = 12)
 	public void verifyPaymentResendFunction() {
 		repairOrderPage.resendPayment("SMS");
+	}
+
+	@Test(priority = 13)
+	public void verifySubmitPayment_ProcessedPayment() {
+		repairOrderPage.submitPayment();
 	}
 
 }

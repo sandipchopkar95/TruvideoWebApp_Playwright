@@ -3,11 +3,8 @@ package com.truvideo.pages;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import org.testng.SkipException;
 import org.testng.asserts.SoftAssert;
-
-import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.ElementHandle;
 import com.microsoft.playwright.FrameLocator;
 import com.microsoft.playwright.Locator;
@@ -46,7 +43,7 @@ public class RepairOrderDetailPage extends JavaUtility {
 	private String whatsApp_Button = ".selected-channel-actions button:has-text('WhatsApp')";
 	private String sms_Button = ".selected-channel-actions button:has-text('SMS')";
 	private String communicationTabs = ".mat-mdc-tab-label-container div[role='tab']";
-	private String messages = "ngx-messaging-chat-body ngx-messaging-message";
+	private String messages = "ngx-message div.message";
 	// Estimate
 	private String create_Edit_Estimate_WindowHeader = "mat-card span:has-text('Estimate - Create/Edit Estimate')";
 	private String items_Tab = "mat-card-content .mdc-tab__content span:has-text('Items')";
@@ -94,6 +91,9 @@ public class RepairOrderDetailPage extends JavaUtility {
 	private String editButton_ReviewScreen = "app-invoice button:has-text('Edit')";
 	private String printButton_ReviewScreen = "app-invoice button:has-text('Print')";
 	private String sendButton_ReviewScreen = "app-invoice button:has-text('Send')";
+	private String lastMessageEndlink = "ngx-message div.message a";
+	private String playButton = "button[title='Play Video']";
+	private String authoriseWork_Button = "button:has-text('Authorize Work')";
 
 	private String getRO(String createdRO) {
 		String createdRoInList = "#repair-order-results tbody tr:has-text('" + createdRO + "')";
@@ -108,7 +108,7 @@ public class RepairOrderDetailPage extends JavaUtility {
 		flags.add(checkActivity("Created new repair order.")); // verify activity:Created new repair order
 		return !flags.contains(false);
 	}
-
+	
 	public void addVideoToOrder() {
 		FrameLocator frame = page.frameLocator(orderDetailsIFrame);
 		frame.locator(repairOrder_PageHeading).waitFor();
@@ -118,11 +118,12 @@ public class RepairOrderDetailPage extends JavaUtility {
 			logger.info("RO is New & No media is added");
 			String sendToCustomerClass = getLocatorClass(operations_Buttons, "Send to customer");
 			String viewWithCustomerClass = getLocatorClass(operations_Buttons, "View with customer");
-			if (sendToCustomerClass.contains("disabled") && viewWithCustomerClass.contains("disabled")) {
-				logger.info("Both 'Send to customer' & 'View with customer' button is disabled");
+			String insightClass = getLocatorClass(operations_Buttons, "Insights");
+			if (sendToCustomerClass.contains("disabled") && viewWithCustomerClass.contains("disabled") && insightClass.contains("disabled")) {
+				logger.info("Both 'Send to customer','View with customer' & 'Insights' button is disabled");
 				flags.add(true);
 			} else {
-				logger.info("'Send to customer' or 'View with customer' button is not disabled");
+				logger.info("'Send to customer','View with customer' & 'Insights' button is not disabled");
 				flags.add(false);
 			}
 			softAssert.assertTrue(!flags.contains(false),
@@ -177,7 +178,7 @@ public class RepairOrderDetailPage extends JavaUtility {
 		softAssert.assertTrue(!flags.contains(false), "Verify add video function");
 		softAssert.assertAll();
 	}
-
+	
 	public void sendVideoToCustomer(String channelSelected) {
 		FrameLocator frame = page.frameLocator(orderDetailsIFrame);
 		if (!frame.locator(added_Video).first().isVisible()) {
@@ -221,13 +222,6 @@ public class RepairOrderDetailPage extends JavaUtility {
 		frame.locator(estimate_Button).click();
 		logger.info("Click on Create Estimate button");
 		page.waitForTimeout(4000);
-		/*
-		 * List<String> allAvailableLabels = Arrays.asList("Item", "Description",
-		 * "Amount", "Type", "Actions", "Extra"); List<String> allTexts =
-		 * frame.locator(list_ItemHeader).allInnerTexts();
-		 * softAssert.assertTrue(allTexts.containsAll(allAvailableLabels),
-		 * "Verify all labels are available on estimate window");
-		 */
 		addItemToList(items_DropdownList, "Test Item 1", "Pre-Approved"); // adding exact same value from list
 		addItemToList(items_DropdownList, "Test Item", "Recommended"); // adding value that is not in list
 		addItemToList(items_DropdownList, "ABCDEFGH", "Pre-Approved"); // adding value that is not in list
@@ -512,9 +506,6 @@ public class RepairOrderDetailPage extends JavaUtility {
 		softAssert.assertAll();
 	}
 
-	private String lastMessageEndlink = "ngx-messaging-chat-body ngx-messaging-message a";
-	private String playButton = "button[title='Play Video']";
-
 	public void checkStatus_OnVideoWatch() {
 		FrameLocator frame = page.frameLocator(orderDetailsIFrame);
 		SoftAssert softAssert = new SoftAssert();
@@ -542,9 +533,7 @@ public class RepairOrderDetailPage extends JavaUtility {
 		softAssert.assertAll();
 	}
 
-	private String authoriseWork_Button = "button:has-text('Authorize Work')";
-
-	public void estimateConfirmation() {
+	public void estimateConfirmation(String channelSelected) {
 		FrameLocator frame = page.frameLocator(orderDetailsIFrame);
 		SoftAssert softAssert = new SoftAssert();
 		String lastMessage = frame.locator(messages).last().textContent();
@@ -586,17 +575,87 @@ public class RepairOrderDetailPage extends JavaUtility {
 		logger.info("Again click on estimate button");
 		frame.locator(notify_Button).click();
 		logger.info("Click on Notify button");
-		page.waitForTimeout(5000);
+		selectChannelToPerformAction(channelSelected);// Select channel to send video
+		softAssert.assertTrue(verifyNavigationToChannel(channelSelected), "Verify Navigation To selected channel");
 		boolean isLastMessageIsConfirmation = false;
 		if (checkLastMessageInConversation("proceeding") || checkLastMessageInConversation("requested work")) {
 			logger.info("last message is of estimate confirmation");
 			isLastMessageIsConfirmation = true;
 		}
 		softAssert.assertTrue(isLastMessageIsConfirmation, "Verify confirmation message sent");
-		softAssert.assertTrue(checkActivity("Estimate confirmation"), "verify activity for Estimate confirmation");
+		softAssert.assertTrue(checkActivity("Estimate confirmation sent to customer."),
+				"verify activity for Estimate confirmation");
 		softAssert.assertAll();
 	}
 
+	private String payNow_Button = "#pay-now-button-1";
+	private String payWithCardButton = "button:has-text('Pay with Card')";
+	private String emailTextBox = "html #email";
+	private String cardNumberTextBox = "#card_number";
+	private String expiryDate = "#cc-exp";
+	private String cvc_Date = "#cc-csc";
+	private String submitButton = "submitButton";
+	private String paidInvoice_Heading = "'PAID INVOICE'";
+	private String printPayment_Button = "button:has-text('Print')";
+	private String processedPayment_Button = "button:has-text('Processed')";
+	private String paymentIframe = "iframe[src*='https://checkout.stripe.com']";
+
+	public void submitPayment() {
+		FrameLocator frame = page.frameLocator(orderDetailsIFrame);
+		SoftAssert softAssert = new SoftAssert();
+		String lastMessage = frame.locator(messages).last().textContent();
+		if (lastMessage.contains("invoice") || lastMessage.contains("payment")) {
+			logger.info("Last message is Payment Endlink");
+			Page endlinkPage = PlaywrightFactory.getBrowserContext().waitForPage(() -> {
+				frame.locator(lastMessageEndlink).last().click();
+				logger.info("Endlink opened in another tab");
+			});
+			endlinkPage.waitForLoadState();
+			endlinkPage.waitForCondition(() -> endlinkPage.url().contains("truvideo.com/v/"));
+			endlinkPage.click(payNow_Button);
+			logger.info("Endlink : Click on pay Now Button");
+			endlinkPage.click(payWithCardButton);
+			logger.info("Endlink : Click on pay with card Button");
+			FrameLocator paymentFrame = page.frameLocator(paymentIframe);
+			paymentFrame.locator(emailTextBox).fill("test@gmail.com");
+			paymentFrame.locator(cardNumberTextBox).fill("4111111111111111");
+			paymentFrame.locator(expiryDate).fill("1229");
+			paymentFrame.locator(cvc_Date).fill("123");
+			paymentFrame.locator(submitButton).click();
+			logger.info("Entered all necessary details & click on Submit Button");
+			boolean isInvoicePaid = false;
+			if (endlinkPage.isVisible(paidInvoice_Heading)) {
+				logger.info("Invoice Paid Sucessfully");
+				isInvoicePaid = true;
+			}
+			softAssert.assertTrue(isInvoicePaid, "Payment done from Endlink");
+		} else {
+			throw new SkipException("Last Message is not payment Endlink");
+		}
+		softAssert.assertTrue(frame.locator(payment_Button).textContent().contains("Process payment"),
+				"verify payemt Status changed to Process Payment");
+		softAssert.assertTrue(verifyChangedStatusOnROList("$-Paid"), "verify $-Paid status on RO list");
+		softAssert.assertTrue(checkActivity("Invoice paid by customer."), "verify activity for paid invoice");
+		frame.locator(payment_Button).click();
+		Page newPage = PlaywrightFactory.getBrowserContext().waitForPage(() -> {
+			frame.locator(printPayment_Button).first().click();
+			logger.info("Click on Print button");
+		});
+		newPage.waitForLoadState();
+		softAssert.assertTrue(newPage.url().contains(AppConstants.PRINT_SCREEN_URL), "verify print screen opened?");
+		newPage.close();
+		logger.info("Print window closed");
+		frame.locator(processedPayment_Button).first().click();
+		softAssert.assertTrue(getWindowHeading().contains("COMPLETED"), "Verify payment heading -COMPLETED");
+		frame.locator(closeWindow_Button).click();
+		logger.info("Payment window closed");
+		softAssert.assertTrue(frame.locator(payment_Button).textContent().contains("Processed"),
+				"verify payemt Status changed to Processed");
+		softAssert.assertTrue(verifyChangedStatusOnROList("$-Processed"), "verify $-Processed status on RO list");
+		softAssert.assertTrue(checkLastMessageInConversation("successful"), "Verify payment successful message");
+		softAssert.assertTrue(checkActivity("Invoice processed by Advisor."), "Verify activity for Processed payment");
+	}
+	
 	private String getWindowHeading() {
 		page.waitForTimeout(4000);
 		FrameLocator frame = page.frameLocator(orderDetailsIFrame);
@@ -746,58 +805,41 @@ public class RepairOrderDetailPage extends JavaUtility {
 		boolean flag = false;
 		FrameLocator frame = page.frameLocator(orderDetailsIFrame);
 		frame.locator(activity_Tab).first().click();
-		try {
-			Page.WaitForConditionOptions waitOptions = new Page.WaitForConditionOptions();
-			waitOptions.setTimeout(10000); // Set timeoutto 10 seconds
-			page.waitForCondition(() -> {
-				List<String> activityText = frame.locator(activities).allInnerTexts();
-				logger.debug("Checking activity text: " + activityText);
-				// return activityText.contains(activityLog);
-				return activityText.stream().anyMatch(text -> text.contains(activityLog));
-			}, waitOptions);
-		} catch (Exception e) {
-			logger.error("An error occurred while checking activity: " + e.getMessage());
+		int retryCount = 3;
+		int attempt = 1;
+		while (attempt <= retryCount) {
+			try {
+				page.waitForCondition(() -> {
+					List<String> activityTextList = frame.locator(activities).allInnerTexts();
+					logger.debug("Checking activity text: " + activityTextList);
+					return activityTextList.stream().anyMatch(text -> text.contains(activityLog));
+				});
+				String activityText = frame.locator(activities).nth(0).textContent();
+				logger.info("RO activity is: " + activityText);
+				if (activityText.contains(activityLog)) {
+					flag = true;
+					break;
+				}
+			} catch (Exception e) {
+				logger.info("Searched activity not displayed at attempt " + attempt);
+				logger.info("RO activity is: " + frame.locator(activities).nth(0).textContent());
+			}
+			attempt++;
 		}
-		page.waitForTimeout(4000);
-		String activityText = frame.locator(activities).nth(0).textContent();
-		if (activityText.contains(activityLog)) {
+		if (flag == false) {
+			logger.info("refreshing page to get activity");
+			page.reload();
+			frame.locator(activity_Tab).first().click();
+			String activityText = frame.locator(activities).nth(0).textContent();
 			logger.info("RO activity is: " + activityText);
-			flag = true;
-		} else {
-			logger.info("RO activity is: " + activityText);
+			if (activityText.contains(activityLog)) {
+				logger.info("Activity contains - " + activityLog + " on Refresh");
+				flag = true;
+			}
 		}
 		frame.locator(customer_tab).first().click();
 		return flag;
 	}
-
-	/*
-	 * private boolean checkActivity1(String activityLog) { boolean flag = false;
-	 * FrameLocator frame = page.frameLocator(orderDetailsIFrame);
-	 * frame.locator(activity_Tab).first().click(); int retryCount = 3; for (int i =
-	 * 0; i <= retryCount; i++) { try { String activityText =
-	 * frame.locator(activities).nth(0).textContent(); if
-	 * (activityText.contains(activityLog)) { logger.info("RO activity is: " +
-	 * activityText); flag = true; } else { logger.info("RO activity is: " +
-	 * activityText); } }catch (Exception e) { retryCount++; }
-	 * 
-	 * }
-	 * 
-	 * 
-	 * try { Page.WaitForConditionOptions waitOptions = new
-	 * Page.WaitForConditionOptions(); waitOptions.setTimeout(10000); // Set
-	 * timeoutto 10 seconds page.waitForCondition(() -> { List<String> activityText
-	 * = frame.locator(activities).allInnerTexts();
-	 * logger.debug("Checking activity text: " + activityText); // return
-	 * activityText.contains(activityLog); return
-	 * activityText.stream().anyMatch(text -> text.contains(activityLog)); },
-	 * waitOptions); } catch (Exception e) {
-	 * logger.error("An error occurred while checking activity: " + e.getMessage());
-	 * } page.waitForTimeout(4000); String activityText =
-	 * frame.locator(activities).nth(0).textContent(); if
-	 * (activityText.contains(activityLog)) { logger.info("RO activity is: " +
-	 * activityText); flag = true; } else { logger.info("RO activity is: " +
-	 * activityText); } frame.locator(customer_tab).first().click(); return flag; }
-	 */
 
 	private boolean checkStatus(String status) {
 		FrameLocator frame = page.frameLocator(orderDetailsIFrame);
@@ -814,29 +856,40 @@ public class RepairOrderDetailPage extends JavaUtility {
 	private boolean checkLastMessageInConversation(String messageKeyWords) {
 		boolean flag = false;
 		FrameLocator frame = page.frameLocator(orderDetailsIFrame);
-		try {
-			Page.WaitForConditionOptions waitOptions = new Page.WaitForConditionOptions();
-			waitOptions.setTimeout(10000); // Set timeout to 10 seconds
-			page.waitForCondition(() -> {
-				String lastMessageContent = frame.locator(messages).last().textContent();
-				logger.debug("Checking last message text: " + lastMessageContent);
-				String lastMessageContent_LowerCase = lastMessageContent.toLowerCase();
-				String messageKeyWords_LowerCase = messageKeyWords.toLowerCase();
-				return lastMessageContent_LowerCase.contains(messageKeyWords_LowerCase);
-			}, waitOptions);
-		} catch (Exception e) {
-			logger.error("An error occurred while checking the last message in the conversation: " + e.getMessage());
-		}
-		page.waitForTimeout(4000);
-		String lastMessageContent = frame.locator(messages).last().textContent();
-		String lastMessageContent_LowerCase = lastMessageContent.toLowerCase();
+		int retryCount = 3;
+		int attempt = 1;
 		String messageKeyWords_LowerCase = messageKeyWords.toLowerCase();
-		if (lastMessageContent_LowerCase.contains(messageKeyWords_LowerCase)) {
-			logger.info("Last message sent contains the keywords: " + messageKeyWords + " - " + lastMessageContent);
-			flag = true;
-		} else {
-			logger.info(
-					"Last message sent does not contain the keywords: " + messageKeyWords + " - " + lastMessageContent);
+		while (attempt <= retryCount) {
+			page.waitForTimeout(4000);
+			try {
+				String lastMessageContent = frame.locator(messages).last().textContent().toLowerCase();
+				logger.debug("Checking last message text: " + lastMessageContent);
+				if (lastMessageContent.contains(messageKeyWords_LowerCase)) {
+					logger.info("Last message contains keyword - " + messageKeyWords + " at attempt " + attempt);
+					logger.info("Last Message is : " + lastMessageContent);
+					flag = true;
+					break;
+				} else {
+					logger.info("Last message does not contain keyword - " + messageKeyWords + " at attempt "
+							+ (attempt + 1));
+					logger.info("Last Message is : " + lastMessageContent);
+				}
+			} catch (Exception e) {
+				logger.info("Exception while checking last message at attempt " + attempt + ": " + e.getMessage());
+				logger.info("Last Message is : " + frame.locator(messages).last().textContent());
+			}
+			attempt++;
+		}
+		if (flag == false) {
+			logger.info("refreshing page to get Last Message");
+			page.reload();
+			String lastMessageContent = frame.locator(messages).last().textContent().toLowerCase();
+			logger.debug("Checking last message text: " + lastMessageContent);
+			if (lastMessageContent.contains(messageKeyWords_LowerCase)) {
+				logger.info("Last message contains keyword - " + messageKeyWords + " on Refresh");
+				logger.info("Last Message is : " + lastMessageContent);
+				flag = true;
+			}
 		}
 		return flag;
 	}
