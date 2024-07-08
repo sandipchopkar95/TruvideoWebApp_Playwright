@@ -19,4 +19,9 @@
 			<class name="com.truvideo.tests.OrderListPageTest"></class>
 		</classes>
 	</test>
+	<test name="Order Details Page Test">
+		<classes>
+			<class name="com.truvideo.tests.RepairOrderDetailPageTest"></class>
+		</classes>
+	</test>
 </suite> 

@@ -1,6 +1,10 @@
 package com.truvideo.pages;
 
+import java.nio.file.Paths;
+
+import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.Page;
+import com.truvideo.factory.PlaywrightFactory;
 import com.truvideo.utility.JavaUtility;
 
 public class LoginPage extends JavaUtility {
@@ -54,7 +58,7 @@ public class LoginPage extends JavaUtility {
 		page.click(logIn_Button);
 		logger.info("Clicked on LogIn button without entering credentials");
 		String errorMessage = page.textContent(errorAlertMessage_Login);
-		logger.info("Error message displayed for null credentials as : "+errorMessage);
+		logger.info("Error message displayed for null credentials as : " + errorMessage);
 		page.locator(close_Button_ErrorAlert).first().click();
 		return errorMessage;
 	}
@@ -65,7 +69,7 @@ public class LoginPage extends JavaUtility {
 		page.click(logIn_Button);
 		logger.info("Clicked on LogIn button when entering invalid login credentials");
 		String errorMessage = page.textContent(errorAlertMessage_Login);
-		logger.info("Error message displayed for ivalid credentials as : "+errorMessage);
+		logger.info("Error message displayed for ivalid credentials as : " + errorMessage);
 		page.locator(close_Button_ErrorAlert).first().click();
 		return errorMessage;
 	}
@@ -89,6 +93,8 @@ public class LoginPage extends JavaUtility {
 		HomePage homePage = new HomePage(page);
 		logInUsername = page.textContent(homePage.getLoginUserLabel());
 		logInDealer = page.textContent(homePage.getLoginDealerLabel());
+		//PlaywrightFactory.getBrowserContext().storageState(new BrowserContext.StorageStateOptions()
+		//		.setPath(Paths.get("./src/main/resources/LoginStorageState/loginDetails.json")));
 		return new HomePage(page);
 	}
 	

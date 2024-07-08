@@ -383,10 +383,10 @@ public class OrderListPage extends JavaUtility {
 	}
 
 	public RepairOrderDetailPage navigateToOrderDetails() {
-		newRoNumber = addRepairOrder();
-		Locator tableRow = page.locator(tableRows);
-		tableRow.locator("td:has-text('" + newRoNumber + "')").first().click();
-		//page.locator("table#repair-order-results tr td:nth-child(4)").first().click();
+		//newRoNumber = addRepairOrder();
+		//Locator tableRow = page.locator(tableRows);
+		//tableRow.locator("td:has-text('" + newRoNumber + "')").first().click();
+		page.locator("table#repair-order-results tr td:nth-child(4)").first().click();
 		page.waitForURL(url-> url.contains("order/service/view"));
 		return new RepairOrderDetailPage(page);
 	}
