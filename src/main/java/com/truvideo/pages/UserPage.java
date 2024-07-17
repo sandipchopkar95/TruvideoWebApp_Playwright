@@ -96,6 +96,7 @@ public class UserPage extends JavaUtility {
 
 	public void addNewUser(String roles, String dealer) throws InterruptedException {
 		page.click(addUser_button);
+		System.out.println("Sooraj101 test");
 		logger.info("Clicked on Add User Button");
 		page.click(saveButton);
 		logger.info("Clicked on Save button when no Roles or Dealers are selected");
