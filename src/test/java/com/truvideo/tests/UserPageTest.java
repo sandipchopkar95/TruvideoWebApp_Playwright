@@ -20,17 +20,31 @@ public class UserPageTest extends BaseTest {
 	}
 
 	@Test
+	public void verifyNewTechnicianUser() throws InterruptedException {
+		userPage.addNewTechnician("Kenility Store", "Service App");
+	}
+
+	@Test
 	public void updatePasswordNewUser() throws InterruptedException {
 		userPage.updateUserPassword("Service Dashboard", "Kenility Store", "Test123");
 	}
 
-	@Test
+	@Test(priority = 2)
 	public void loginwithNewUser() throws InterruptedException {
 		userPage.loginwithNewUser("Service Dashboard", "Kenility Store", "Test123", "updatedpassword");
 	}
-	
+
 	@Test
 	public void verifyUserStatus() throws InterruptedException {
 		userPage.userStatus();
+	}
+
+	@Test
+	public void verifyBulkUserCreation() throws InterruptedException {
+		userPage.bulkCreateUser();
+	}
+	@Test
+	public void verifyselectActionsonUser() throws InterruptedException {
+		userPage.actionsOnUsers();
 	}
 }

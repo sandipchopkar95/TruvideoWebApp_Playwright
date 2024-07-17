@@ -2,18 +2,11 @@ package com.truvideo.pages;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.testng.asserts.SoftAssert;
-
-import com.microsoft.playwright.Keyboard;
-import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
-import com.sun.tools.sjavac.Log;
 import com.truvideo.constants.AppConstants;
 import com.truvideo.factory.PlaywrightFactory;
 import com.truvideo.utility.JavaUtility;
-
-import net.bytebuddy.asm.Advice.Enter;
 
 public class UserPage extends JavaUtility {
 	private Page page;
@@ -24,7 +17,6 @@ public class UserPage extends JavaUtility {
 
 	private String addUser_button = "button:has-text('Add User')";
 	private String selectRoles_option = "#s2id_autogen1";
-	// private String selectRoles_option = "div[class='select2-result-label']";
 
 	public String getRoles(String roles) {
 		String element = "div[class='select2-result-label']:has-text('" + roles + "')";
@@ -59,7 +51,6 @@ public class UserPage extends JavaUtility {
 	private String emptyEmailAddressAlert = "small:has-text('Email Address is a required field.')";
 	private String alredyExistsEmail = "span small";
 	private String topRightCornerNotification = "div.notifications";
-	String uniqueFirstname;
 	private String editUser = ".approved-user-action a.edit-action";
 	private String deactivateUserButton = "#deactivate-user-button";
 	private String updateUserButton = "#update-password-button";
@@ -73,7 +64,6 @@ public class UserPage extends JavaUtility {
 	private String invalidPasswordicon = "#validate-password-not-ok";
 	private String confirmInvalidPasswordicon = "#validate-confirm-password-ok";
 	private String confirmInvalidPasswordtext = "span.help-inline";
-
 	private String password_TextBox = "#newPassword";
 	private String confirmNewPassword_TextBox = "#confirmPassword";
 	private String submitButton = "#save-user";
@@ -84,8 +74,20 @@ public class UserPage extends JavaUtility {
 	private String userActivateStatus = ".activate-user";
 	private String activeStatusbutton = "label.btn:has-text('Active')";
 	private String inActiveStatusButton = "label.btn:has-text('Inactive')";
-	
-
+	private String selectActionDropdown = "#selectAction";
+	private String selectActionSubmitButton = "#users-action";
+	private String bulkCreate = ".page-title-div .dropdown-toggle[data-toggle='dropdown']";
+	private String technicianBulkCreate = ".bulk-create-button[data-type='technician']";
+	private String advisorBulkCreate = ".bulk-create-button[data-type='service-advisor']";
+	private String chooseFiles = "#csv-attachment-input";
+	private String startButtonForBulkCreate = "#start-bulk-create";
+	private String closeButtonForBulkCreate = "#close-bulk-create-button";
+	private String crossCloseButtonForBulkCreate = "#close-bulk-create-icon";
+	private String doneButtonForBulkCreate = "#done-bulk-create-button";
+	private String usersLabel = "#page-title-text";
+	private String firstUsercheckbox = "table#user-results tbody tr:nth-child(2) td:nth-child(1)";
+	private String secondUsercheckbox = "table#user-results tbody tr:nth-child(3) td:nth-child(1)";
+	String uniqueFirstname;
 	String userEmailID;
 	String usernewDummyPassword;
 
@@ -117,19 +119,16 @@ public class UserPage extends JavaUtility {
 		}
 		softAssert.assertTrue(!flags.contains(false), "Error Alert message when Role & Dealer is not entered");
 		flags.clear();
-		page.waitForTimeout(3000);
+		page.waitForTimeout(2000);
 		page.click(selectRoles_option);
 		page.fill(selectRoles_option, roles);
 		page.click(getRoles(roles));
-
-		page.waitForTimeout(4000);
-
+		page.waitForTimeout(1000);
 		page.click(selectDealer_option);
 		page.fill(selectDealer_option, dealer);
 		page.click(getDealer(dealer));
-		page.waitForTimeout(5000);
-
-		if (page.textContent(emptyFirstNameAlert).contains("First Name is a required field..")) {
+		page.waitForTimeout(1000);
+		if (page.textContent(emptyFirstNameAlert).contains("First Name is a required field")) {
 			logger.info("Alert message for Role Displayed");
 			flags.add(true);
 		} else {
@@ -153,23 +152,21 @@ public class UserPage extends JavaUtility {
 		}
 		softAssert.assertTrue(!flags.contains(false),
 				"Error Alert message when Role,Dealer,First Name,Last Name and Email is not entered");
-
-		page.waitForTimeout(4000);
+		page.waitForTimeout(1000);
 		page.click(firstName);
-		page.fill(firstName, getRandomString(5) + "Test Automation");
+		page.fill(firstName, getRandomString(5));
 		logger.info("First name is Added");
 		page.click(lastName);
-		page.fill(lastName, "User");
+		page.fill(lastName, getRandomString(5) + "Test Automation");
 		logger.info("Last name is Added");
 		page.click(emailAddress);
 		page.fill(emailAddress, "testautomation@gmail.com");
 		logger.info("Email address is Added");
 		page.click(saveButton);
 		logger.info("Clicked on Save button");
-		page.waitForTimeout(9000);
+		page.waitForTimeout(2000);
 		uniqueFirstname = page.inputValue(firstName);
 		logger.info("Updated First Name " + uniqueFirstname);
-
 		softAssert.assertTrue(page.textContent(alredyExistsEmail).contains("is already registered."),
 				"Verify Existing users email error message");
 		if (page.isVisible(alredyExistsEmail)) {
@@ -178,16 +175,96 @@ public class UserPage extends JavaUtility {
 		logger.info(page.inputValue(emailAddress));
 		userEmailID = page.inputValue(emailAddress);
 		page.click(saveButton);
-		page.waitForTimeout(9000);
-
-		String topRightCornerNotificationPopup = page.textContent(topRightCornerNotification);
+		page.waitForSelector(topRightCornerNotification);
+		String topRightCornerNotificationPopup = page.innerText(topRightCornerNotification);
 		logger.info(topRightCornerNotificationPopup);
 		if (topRightCornerNotificationPopup.contains(AppConstants.USER_SAVED_MESSAGE)) {
 			logger.info("New User saved Successfully");
 		} else {
 			logger.info("Getting error to add New User ");
 		}
-//return uniqueFirstname;
+		softAssert.assertAll();
+	}
+
+	public void addNewTechnician(String dealer, String roles) throws InterruptedException {
+		page.click(addUser_button);
+		logger.info("Clicked on Add User Button");
+		page.click(saveButton);
+		logger.info("Clicked on Save button when no Roles or Dealers are selected");
+		SoftAssert softAssert = new SoftAssert();
+		List<Boolean> flags = new ArrayList<Boolean>();
+		if (page.textContent(emptyRoleAlert).contains("At least one Group is required.")) {
+			logger.info("Alert message for Role Displayed");
+			flags.add(true);
+		} else {
+			logger.info("Alert message for Role Not Displayed");
+			flags.add(false);
+		}
+		if (page.textContent(emptyDealerAlert).contains("At least one Dealer is required.")) {
+			logger.info("Alert message for Dealer Displayed");
+			flags.add(true);
+		} else {
+			logger.info("Alert message for Dealer Not Displayed");
+			flags.add(false);
+		}
+		softAssert.assertTrue(!flags.contains(false), "Error Alert message when Role & Dealer is not entered");
+		flags.clear();
+		page.waitForTimeout(2000);
+		page.click(selectRoles_option);
+		page.fill(selectRoles_option, roles);
+		page.click(getRoles(roles));
+		page.waitForTimeout(1000);
+		page.click(selectDealer_option);
+		page.fill(selectDealer_option, dealer);
+		page.click(getDealer(dealer));
+		page.waitForTimeout(1000);
+		page.click(firstName);
+		page.fill(firstName, getRandomString(5));
+		logger.info("First name is Added");
+		page.click(lastName);
+		page.fill(lastName, getRandomString(5) + "Test Automation");
+		logger.info("Last name is Added");
+		page.fill(title, "Technician");
+		page.click(saveButton);
+		logger.info("Clicked on Save button");
+		page.waitForSelector(topRightCornerNotification);
+		String topRightCornerNotificationPopup = page.innerText(topRightCornerNotification);
+		softAssert.assertTrue(topRightCornerNotificationPopup.contains(AppConstants.USER_SAVED_MESSAGE),
+				"verify technician user creation");
+		softAssert.assertAll();
+	}
+
+	public void bulkCreateUser() throws InterruptedException {
+		SoftAssert softAssert = new SoftAssert();
+		page.click(bulkCreate);
+		logger.info("Clicked on Bulk create button for adding users");
+		page.click(technicianBulkCreate);
+		logger.info("Selected Technician to add bulk technicians");
+		page.waitForTimeout(2000);
+		createAndUploadCsvFile_Technician(page);
+		page.waitForTimeout(2000);
+		page.click(startButtonForBulkCreate);
+		logger.info("Technicians are createing ...");
+		page.click(doneButtonForBulkCreate);
+		logger.info("Technicians are created successfully and navigatiged to user page");
+		page.waitForTimeout(2000);
+		String users = page.innerText(usersLabel);
+		softAssert.assertTrue(users.contains("Users"));
+		page.click(bulkCreate);
+		logger.info("Clicked on Bulk create button for adding users");
+		page.click(advisorBulkCreate);
+		logger.info("Selected Advisor to add bulk Advisors");
+		page.waitForTimeout(2000);
+		createAndUploadCsvFile_Advisor(page);
+		page.waitForTimeout(2000);
+		page.click(startButtonForBulkCreate);
+		logger.info("Advisors are createing ...");
+		page.waitForTimeout(2000);
+		page.click(doneButtonForBulkCreate);
+		logger.info("Advisors are created successfully and navigatiged to user page");
+		page.waitForTimeout(2000);
+		softAssert.assertTrue(users.contains("Users"));
+		softAssert.assertAll();
 	}
 
 	public void updateUserPassword(String roles, String dealer, String password) throws InterruptedException {
@@ -256,7 +333,7 @@ public class UserPage extends JavaUtility {
 		logger.info("navigated to the url" + newBrowserPage.url());
 		newBrowserPage.waitForTimeout(6000);
 		LoginPage loginPage = new LoginPage(newBrowserPage);
-		//HomePage homePage = new HomePage(newBrowserPage);
+		// HomePage homePage = new HomePage(newBrowserPage);
 		loginPage.navigateToUpdatePassword(newBrowserPage, userEmailID, usernewDummyPassword);
 		logger.info("navigated to the update password page after putting new username and password value");
 		newBrowserPage.waitForTimeout(2000);
@@ -284,9 +361,8 @@ public class UserPage extends JavaUtility {
 		newBrowserPage.waitForTimeout(6000);
 		newBrowserPage.close();
 	}
-	
-	public void userStatus()
-	{
+
+	public void userStatus() throws InterruptedException {
 		page.waitForTimeout(9000);
 		page.fill(userSearchbox, "CzmyFTest Automation");
 		page.waitForTimeout(9000);
@@ -294,70 +370,65 @@ public class UserPage extends JavaUtility {
 		page.click(searchButton);
 		page.waitForTimeout(9000);
 		page.click(userDeactivateStatus);
-		logger.info("Successfully deactivated user");
+		SoftAssert softAssert = new SoftAssert();
+		page.waitForTimeout(4000);
+		Thread.sleep(3000);
+		String topRightCornerNotificationPopup = page.innerText(topRightCornerNotification);
+		String topRightCornerNotificationPopup1 = topRightCornerNotificationPopup.replace('×', ' ').trim();
+		logger.info(topRightCornerNotificationPopup1);
+		boolean isUserActivateMessageDispayed = false;
+		if (topRightCornerNotificationPopup1.contains(AppConstants.USER_DEACTIVATE_MESSAGE)) {
+			logger.info("User De-Activate Successfully");
+			isUserActivateMessageDispayed = true;
+		}
+		softAssert.assertTrue(isUserActivateMessageDispayed, "Successfully changed the user status to active");
+
 		page.waitForTimeout(9000);
-		page.waitForCondition(()->page.isVisible(inActiveStatusButton));
+		page.waitForCondition(() -> page.isVisible(inActiveStatusButton));
 		page.click(inActiveStatusButton);
 		logger.info("User is clicked on InActive status button");
 		page.waitForTimeout(3000);
 		page.click(userActivateStatus);
+		Thread.sleep(3000);
 		logger.info("Again Successfully Activated user");
 		page.waitForTimeout(2000);
 		page.click(activeStatusbutton);
 		logger.info("Again Clicked on Active status button and Verified user is present in Active filter");
-		
+		softAssert.assertAll();
 	}
 
-	public void searchUser(String usernametoSearch) {
-		// Fill the search box with the username to search
-		page.fill(userSearchbox, usernametoSearch);
-		logger.info("Entered user name to search");
+	public void actionsOnUsers() {
+		SoftAssert softAssert = new SoftAssert();
+		page.selectOption(selectActionDropdown, "Send Invite to App");
+		logger.info("Actions dropdown is opened now selected Send Invite to App to perform on users");
+		page.click(firstUsercheckbox);
+		logger.info("Selected first user to perform Send Invite to App action");
+		page.click(selectActionSubmitButton);
+		page.waitForSelector(topRightCornerNotification);
+		String topRightCornerNotificationPopup = page.innerText(topRightCornerNotification);
+		softAssert.assertTrue(topRightCornerNotificationPopup.contains(AppConstants.USER_SEND_INVITE_TO_APP_MESSAGE),
+				"verify technician user creation");
 
-		// Click the search button
-		page.click(searchButton);
-		logger.info("Clicked on search button - Associated users are displaying");
+		page.selectOption(selectActionDropdown, "Send Invite to Web Dashboard");
+		logger.info("Actions dropdown is opened now selected Send Invite to App to perform on users");
+		page.click(firstUsercheckbox);
+		logger.info("Selected first user to perform Send Invite to Web Dashboard action");
+		page.click(selectActionSubmitButton);
+		page.waitForSelector(topRightCornerNotification);
+		String topRightCornerNotificationPopup1 = page.innerText(topRightCornerNotification);
+		softAssert.assertTrue(
+				topRightCornerNotificationPopup1.contains(AppConstants.USER_SEND_INVITE_TO_WEB_DASHBOARD_MESSAGE),
+				"verify send Invite to Dashboard");
 
-		// Locate the rows in the search results
-		Locator rows = page.locator(
-				"#user-results tbody tr[data-id*='1'], #user-results tbody tr[data-id*='2'], #user-results tbody tr[data-id*='3']");
-		int rowCount = rows.count();
-
-		// Iterate through each row
-		for (int i = 0; i < rowCount; i++) {
-			Locator row = rows.nth(i);
-
-			// Check if the row's text content contains the username to search
-			if (row.textContent().contains(usernametoSearch)) {
-				String firstName = row.locator("td:nth-child(3)").textContent();
-				String lastName = row.locator("td:nth-child(4)").textContent();
-				logger.info("Firstname is: " + firstName);
-				logger.info("Lastname is: " + lastName);
-			}
-		}
+		page.selectOption(selectActionDropdown, "Deactivate User/Device");
+		logger.info("Actions dropdown is opened now selected Send Invite to App to perform on users");
+		page.click(firstUsercheckbox);
+		logger.info("Selected first user to perform Deactivate User action");
+		page.click(selectActionSubmitButton);
+		page.waitForSelector(topRightCornerNotification);
+		String topRightCornerNotificationPopup2 = page.innerText(topRightCornerNotification);
+		softAssert.assertTrue(topRightCornerNotificationPopup2.contains(AppConstants.USER_DEVICE_DEACTIVATE_MESSAGE),
+				"verify user action to deactivate ");
+		softAssert.assertAll();
 	}
-
-	public void searchUser1(String usernametoSearch) {
-		page.fill(userSearchbox, usernametoSearch);
-		logger.info("Entered user name to search");
-		page.click(searchButton);
-		logger.info("Clicked on search button - Associated users are displaying");
-		Locator rows = page.locator(
-				"#user-results tbody tr[data-id*='1'], #user-results tbody tr[data-id*='2'],#user-results tbody tr[data-id*='3']");
-		page.locator("test").textContent().equals(usernametoSearch);
-		{
-			page.locator("test").click();
-		}
-		int rowCount = rows.count();
-		for (int i = 0; i < rowCount; i++) {
-			Locator row = rows.nth(i);
-			if (row.textContent().contains(usernametoSearch)) {
-				for (int j = 0; j < i; j++) {
-					String firstName = row.locator("td:nth-child(3)").textContent();
-					String lastname = row.locator("td:nth-child(4)").textContent();
-					logger.info("Firstname is : " + firstName);
-				}
-			}
-		}
-	}
-
 }
