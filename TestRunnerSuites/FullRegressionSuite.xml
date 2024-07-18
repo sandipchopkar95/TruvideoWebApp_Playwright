@@ -24,4 +24,9 @@
 			<class name="com.truvideo.tests.RepairOrderDetailPageTest"></class>
 		</classes>
 	</test>
+	<test name="User Page Test">
+		<classes>
+			<class name="com.truvideo.tests.UserPageTest"></class>
+		</classes>
+	</test>
 </suite> 

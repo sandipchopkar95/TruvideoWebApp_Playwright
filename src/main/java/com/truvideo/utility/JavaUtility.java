@@ -89,7 +89,7 @@ public class JavaUtility {
 	}
 
 	public void createAndUploadCsvFile_Advisor(Page page) {
-		String filePath = "unique_data_advisor.csv";
+		String filePath = "./src/test/resources/CreateUserData"+"unique_data_advisor.csv";
 		createCsvFile_Advisor(filePath);
 		try {
 			byte[] fileContent = Files.readAllBytes(Paths.get(filePath));
@@ -100,7 +100,7 @@ public class JavaUtility {
 	}
 
 	public void createAndUploadCsvFile_Technician(Page page) {
-		String filePath = "unique_data_technician.csv";
+		String filePath = "./src/test/resources/CreateUserData"+"unique_data_technician.csv";
 		createCsvFile_Technician(filePath);
 		try {
 			byte[] fileContent = Files.readAllBytes(Paths.get(filePath));
