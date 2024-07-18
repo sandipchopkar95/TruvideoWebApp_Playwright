@@ -1,10 +1,6 @@
 package com.truvideo.pages;
 
-import java.nio.file.Paths;
-
-import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.Page;
-import com.truvideo.factory.PlaywrightFactory;
 import com.truvideo.utility.JavaUtility;
 
 public class LoginPage extends JavaUtility {

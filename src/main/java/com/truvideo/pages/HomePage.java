@@ -103,6 +103,7 @@ public class HomePage extends JavaUtility {
 	}
 
 	// User Account Dropdown
+	
 	private String logInUserLabel = "li.account-nav a span span:nth-child(3)";
 
 	public String getLoginUserLabel() {
