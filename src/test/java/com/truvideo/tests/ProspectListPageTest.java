@@ -21,5 +21,25 @@ public class ProspectListPageTest extends BaseTest {
 	public void verifyAllAvailableElementsOnROListPage() {
 		Assert.assertTrue(prospectListPage.checkAllAvailableElements_SOListPage());
 	}
+	
+	@Test(priority = 2)
+	public void verify_MyROs_Filter() {
+		Assert.assertTrue(prospectListPage.clickOn_MySOs_Filter());
+	}
+	
+	@Test(priority = 3)
+	public void verify_AllOpen_Filter() {
+		Assert.assertTrue(prospectListPage.clickOn_AllOpen_Filter());
+	}
+	
+	@Test(priority = 4)
+	public void verify_ForReview_Filter() {
+		Assert.assertTrue(prospectListPage.clickOn_ForReview_Filter());
+	}
+	
+	@Test(priority = 5)
+	public void verify_AllClosed_Filter() {
+		Assert.assertTrue(prospectListPage.clickOn_AllClosed_Filter());
+	}
 
 }
