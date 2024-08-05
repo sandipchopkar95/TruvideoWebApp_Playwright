@@ -41,5 +41,16 @@ public class ProspectListPageTest extends BaseTest {
 	public void verify_AllClosed_Filter() {
 		Assert.assertTrue(prospectListPage.clickOn_AllClosed_Filter());
 	}
+	@Test(priority = 6)
+	public void verify_AllFieldsOn_AddSalesProspectScreen() {
+		Assert.assertTrue(prospectListPage.checkAllAvailableElements_SOListPage());
+	}
+	
+	@Test(priority = 7)
+	public void verify_AddNewSalesProspect() {
+		String newSO=prospectListPage.addNewSalesProspect();
+		String firstSOinTable=prospectListPage.getFirstSOInList();
+		Assert.assertEquals(newSO, firstSOinTable);
+	}
 
 }

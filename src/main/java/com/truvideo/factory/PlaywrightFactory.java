@@ -2,6 +2,7 @@ package com.truvideo.factory;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.util.ArrayList;
 import java.util.Properties;
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserContext;
@@ -20,6 +21,7 @@ public class PlaywrightFactory extends JavaUtility {
 	Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
 	int width = (int) screensize.getWidth();
 	int height = (int) screensize.getHeight();
+	
 
 	private static ThreadLocal<Playwright> tlPlaywright = new ThreadLocal<>();
 	private static ThreadLocal<Browser> tlBrowser = new ThreadLocal<>();
@@ -46,24 +48,26 @@ public class PlaywrightFactory extends JavaUtility {
 		String browserName = prop.getProperty("browser").trim();
 		System.out.println("Browser name is : " + browserName);
 		tlPlaywright.set(Playwright.create());
+		ArrayList<String> argument = new ArrayList<>();
+		argument.add("--start-maximized");
 
 		switch (browserName.toLowerCase()) {
 		case "chromium":
 			tlBrowser.set(getPlaywright().chromium().launch(new BrowserType.LaunchOptions().setHeadless(false)));
 			break;
 		case "firefox":
-			tlBrowser.set(getPlaywright().firefox().launch(new BrowserType.LaunchOptions().setHeadless(false)));
+			tlBrowser.set(getPlaywright().firefox().launch(new LaunchOptions().setChannel("firefox").setHeadless(false).setArgs(argument)));
 			break;
 		case "safari":
 			tlBrowser.set(getPlaywright().webkit().launch(new BrowserType.LaunchOptions().setHeadless(false)));
 			break;
 		case "chrome":
 			tlBrowser.set(
-					getPlaywright().chromium().launch(new LaunchOptions().setChannel("chrome").setHeadless(false)));
+					getPlaywright().chromium().launch(new LaunchOptions().setChannel("chrome").setHeadless(false).setArgs(argument)));
 			break;
 		case "edge":
 			tlBrowser.set(
-					getPlaywright().chromium().launch(new LaunchOptions().setChannel("msedge").setHeadless(false)));
+					getPlaywright().chromium().launch(new LaunchOptions().setChannel("msedge").setHeadless(false).setArgs(argument)));
 			break;
 
 		default:
@@ -71,11 +75,22 @@ public class PlaywrightFactory extends JavaUtility {
 			break;
 		}
 
-		tlBrowserContext.set(getBrowser().newContext());
+		if(browserName.equalsIgnoreCase("chrome" )||browserName.equalsIgnoreCase( "edge")) {
+			tlBrowserContext.set(getBrowser().newContext(new Browser.NewContextOptions().setViewportSize(null)));
+			tlPage.set(getBrowserContext().newPage());
+			getPage().navigate(prop.getProperty("url").trim());
+			//getPage().setViewportSize(width, height);
+			return getPage();
+		}else {
+		
+		tlBrowserContext.set(getBrowser().newContext(new Browser.NewContextOptions().setViewportSize(width, height)));
 		tlPage.set(getBrowserContext().newPage());
 		getPage().navigate(prop.getProperty("url").trim());
 		getPage().setViewportSize(width, height);
 		return getPage();
+		
+		}
+		
 	}
 
 	/*
