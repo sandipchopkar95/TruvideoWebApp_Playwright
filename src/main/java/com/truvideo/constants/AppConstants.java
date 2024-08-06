@@ -52,5 +52,5 @@ public class AppConstants {
 	public static final String USER_SEND_INVITE_TO_WEB_DASHBOARD_MESSAGE = "Sent invitation to app";
 	public static final String USER_DEVICE_DEACTIVATE_MESSAGE = "Sent invitation to app";
 	
-	
+
 }

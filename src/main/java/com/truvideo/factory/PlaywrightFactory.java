@@ -47,12 +47,12 @@ public class PlaywrightFactory extends JavaUtility {
 		System.out.println("Browser name is : " + browserName);
 		tlPlaywright.set(Playwright.create());
 
-		switch (browserName.toLowerCase()) {
+		switch(browserName.toLowerCase()) {
 		case "chromium":
 			tlBrowser.set(getPlaywright().chromium().launch(new BrowserType.LaunchOptions().setHeadless(false)));
 			break;
-		case "firefox":
-			tlBrowser.set(getPlaywright().firefox().launch(new BrowserType.LaunchOptions().setHeadless(false)));
+		case"firefox":
+			tlBrowser.set(getPlaywright().firefox().launch(new BrowserType.LaunchOptions().setChannel("firefox").setHeadless(false)));
 			break;
 		case "safari":
 			tlBrowser.set(getPlaywright().webkit().launch(new BrowserType.LaunchOptions().setHeadless(false)));
@@ -61,7 +61,7 @@ public class PlaywrightFactory extends JavaUtility {
 			tlBrowser.set(
 					getPlaywright().chromium().launch(new LaunchOptions().setChannel("chrome").setHeadless(false)));
 			break;
-		case "edge":
+		case   "edge":
 			tlBrowser.set(
 					getPlaywright().chromium().launch(new LaunchOptions().setChannel("msedge").setHeadless(false)));
 			break;
