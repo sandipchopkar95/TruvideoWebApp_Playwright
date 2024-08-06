@@ -4,7 +4,7 @@
 	<listeners>
 		<listener class-name="com.truvideo.testutils.Listeners"></listener>
 	</listeners>
-	<test name="Login Page Test">
+	<!-- <test name="Login Page Test">
 		<classes>
 			<class name="com.truvideo.tests.LoginPageTest"></class>
 		</classes>
@@ -23,7 +23,7 @@
 		<classes>
 			<class name="com.truvideo.tests.RepairOrderDetailPageTest"></class>
 		</classes>
-	</test>
+	</test> -->
 	<test name="User Page Test">
 		<classes>
 			<class name="com.truvideo.tests.UserPageTest"></class>

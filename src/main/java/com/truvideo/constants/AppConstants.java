@@ -51,6 +51,10 @@ public class AppConstants {
 	public static final String USER_SEND_INVITE_TO_APP_MESSAGE = "Sent invitation to app";
 	public static final String USER_SEND_INVITE_TO_WEB_DASHBOARD_MESSAGE = "Sent invitation to app";
 	public static final String USER_DEVICE_DEACTIVATE_MESSAGE = "Sent invitation to app";
-	
+
+	//SO List Page
+	public static final String ERROR_MESSAGE_CLICKONCLOSESO_WHEN_SONOTSELECTED = "Please select sales prospects to be closed.";
+	public static final String SUCESS_MESSAGE_SO_CLOSE_WHEN_SO_SELECTED ="Sales prospects have been successfully closed.";
+	public static final String ADD_PROSPECT_URL="https://rc.truvideo.com/crud/sales/0";
 
 }

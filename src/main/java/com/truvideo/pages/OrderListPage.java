@@ -360,7 +360,7 @@ public class OrderListPage extends JavaUtility {
 		String emailId = getRandomString(8) + "@gmail.com";
 		page.fill(emailId_Field, emailId);
 		logger.info("Email Id filled : " + emailId);
-		page.selectOption(technician_Dropdown, prop.getProperty("MobileUserLogin"));
+		page.selectOption(technician_Dropdown, prop.getProperty("MobileUserLogin").trim());
 		page.waitForTimeout(2000);
 		page.click(save_Button);
 		logger.info("Clicked on Save Button");
@@ -383,10 +383,10 @@ public class OrderListPage extends JavaUtility {
 	}
 
 	public RepairOrderDetailPage navigateToOrderDetails() {
-		//newRoNumber = addRepairOrder();
-		//Locator tableRow = page.locator(tableRows);
-		//tableRow.locator("td:has-text('" + newRoNumber + "')").first().click();
-		page.locator("table#repair-order-results tr td:nth-child(4)").first().click();
+	    newRoNumber = addRepairOrder();
+		Locator tableRow = page.locator(tableRows);
+		tableRow.locator("td:has-text('" + newRoNumber + "')").first().click();
+		//page.locator("table#repair-order-results tr td:nth-child(4)").first().click();
 		page.waitForURL(url-> url.contains("order/service/view"));
 		return new RepairOrderDetailPage(page);
 	}

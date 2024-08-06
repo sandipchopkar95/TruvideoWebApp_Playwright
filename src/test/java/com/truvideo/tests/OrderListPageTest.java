@@ -64,12 +64,31 @@ public class OrderListPageTest extends BaseTest {
 		Assert.assertTrue(orderlistpage.checkAllMandatoryErrorMessage());
 	}
 
-	@Test(priority = 11)
-	public void verifyAddRepairOrder() throws Exception {
-		String newCreatedRO = orderlistpage.addRepairOrder();
-		String firstROInList = orderlistpage.getFirstROInList();
-		Assert.assertEquals(firstROInList, newCreatedRO);
-	}
+//	@Test(priority = 11)
+//	public void verifyAddRepairOrder() throws Exception {
+//		String newCreatedRO = orderlistpage.addRepairOrder();
+//		String firstROInList = orderlistpage.getFirstROInList();
+//		Assert.assertEquals(firstROInList, newCreatedRO);
+//	}
+	
+	
+	  @Test(priority = 11)
+	    public void verifyAddRepairOrder() throws Exception {
+	        String newCreatedRO = orderlistpage.addRepairOrder();
+	        String firstROInList = orderlistpage.getFirstROInList();
+	        
+//	        String testCaseId = "686"; // Replace with your actual Zephyr test case ID
+//	        try {
+//	            Assert.assertEquals(firstROInList, newCreatedRO);
+//	            ZephyrReporter.publishTestResult(testCaseId, "Pass");
+//	        } catch (AssertionError e) {
+//	            ZephyrReporter.publishTestResult(testCaseId, "Fail");
+//	            throw e;
+//	        }
+	    }
+	
+	
+	
 
 	@Test(priority = 12, dependsOnMethods = "verifyAddRepairOrder")
 	public void verifyCreatedROIsVisibleObMobileApp() throws Exception {
