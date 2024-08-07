@@ -28,6 +28,15 @@ public class Message_RepairOrdertest extends BaseTest {
 	public void verifyDefaultFilters() {
 		Assert.assertTrue(MessageScreen_order.checkMy_WhatsApp_FilterIsApplied());
 	}
+    @Test(priority = 3)
+    	public void VerifyReadUnreadnotification() {
+    	Assert.assertTrue(MessageScreen_order.VerifyReadUnreadNotification());
+    }
+    
+    @Test(priority = 3)
+    public void VerifySearchfilterbtn() {
+    	Assert.assertTrue(MessageScreen_order.SearchMessagefilter());
+    }
 
 	@Test(priority = 3)
 	public void clickOn_MYfilterBotton() {

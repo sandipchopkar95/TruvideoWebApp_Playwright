@@ -3,6 +3,7 @@ package com.truvideo.pages;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.openqa.selenium.ElementNotInteractableException;
 import org.testng.SkipException;
 
 import com.microsoft.playwright.FrameLocator;
@@ -519,7 +520,7 @@ public class MessageScreen_Order extends JavaUtility {
 				logger.info("Button hit");
 				flags.add(true);
 
-			} catch (Exception e) {
+			} catch (ElementNotInteractableException e) {
 				logger.info("elemnt is not clickable right now");
 				e.printStackTrace();
 				flags.add(true);
@@ -544,4 +545,45 @@ public class MessageScreen_Order extends JavaUtility {
 		}
 		return !flags.contains(false);
 	}
+	private String SearchFilter2 = ".channels-search div.mat-mdc-text-field-wrapper div.mat-mdc-form-field-focus-overlay ";
+	private String SearchFilter = "#mat-input-0";
+	private String SearchbtnSvg = ".mat-mdc-form-field-flex.ng-tns-c3736059725-2 .mat-mdc-form-field-icon-prefix svg";
+	private String Searchbtnfiltersvg = ".mat-mdc-form-field-flex.ng-tns-c3736059725-2 .mat-mdc-form-field-icon-suffix svg";
+	
+	public boolean SearchMessagefilter() {
+		page.waitForTimeout(5000);
+		FrameLocator iframe = page.frameLocator(messageIframe);
+		List<Boolean> flags =  new ArrayList<>();
+		if(iframe.locator(SearchFilter2).isVisible()){
+			iframe.locator(SearchFilter).fill("suraj");
+			page.waitForTimeout(2000);
+			logger.info("Search Filter is not Present");
+			flags.add(false);
+		}
+		else{ 
+			String name = "Suraj";
+		    iframe.locator(SearchFilter).fill(name);
+		}
+		
+		return !flags.contains(false);
+		
+	}
+	
+	private String Conversationtab = "#first-content div div div";
+	private String ReadUnreadbtn = ".info-container__content__actions span";
+//	private String
+//	private String
+	
+	public boolean VerifyReadUnreadNotification() {
+		
+		FrameLocator iframe = page.frameLocator(messageIframe);
+		
+		iframe.locator(ReadUnreadbtn).click();
+		page.waitForTimeout(2000);
+		return true;
+		}
+		
+		
+		
+	
 }
