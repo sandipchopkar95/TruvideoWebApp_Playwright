@@ -63,7 +63,7 @@ public class PlaywrightFactory extends JavaUtility {
 			break;
 		case "chrome":
 			tlBrowser.set(
-					getPlaywright().chromium().launch(new LaunchOptions().setChannel("chrome").setHeadless(false).setArgs(argument)));
+					getPlaywright().chromium().launch(new LaunchOptions().setChannel("chrome").setHeadless(true).setArgs(argument)));
 			break;
 		case "edge":
 			tlBrowser.set(
