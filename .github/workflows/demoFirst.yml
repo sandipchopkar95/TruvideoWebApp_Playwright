@@ -29,5 +29,19 @@ jobs:
 
       - name: Run Maven Tests
         run: mvn test -Dsurefire.suiteXmlFiles=TestRunnerSuites/FullRegressionSuite.xml
-      
+
+      - name: List Report Files
+        run: ls -al TruvideoWebApp_Playwright/Reports
+
+      - name: Send Report via Email
+        run: |
+          if [ -f "TruvideoWebApp_Playwright/Reports/index.html" ]; then
+            echo "Report exists. Proceeding with email."
+            # Replace this line with your email sending logic
+          else
+            echo "Report does not exist!"
+            exit 1
+          fi
+
       - run: echo "🍏 This job's status is ${{ job.status }}."
+
