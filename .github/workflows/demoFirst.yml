@@ -17,4 +17,4 @@ jobs:
     - name: Install Playwright
       run: mvn exec:java -e -D exec.mainClass=com.microsoft.playwright.CLI -D exec.args="install --with-deps"
     - name: Run tests
-      run: mvn test -Dsurefire.suiteXmlFiles=TestRunnerSuites/FullRegressionSuite.xml
+      run: mvn test 
