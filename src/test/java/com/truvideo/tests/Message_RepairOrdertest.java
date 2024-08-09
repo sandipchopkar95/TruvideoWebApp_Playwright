@@ -32,13 +32,16 @@ public class Message_RepairOrdertest extends BaseTest {
     	public void VerifyReadUnreadnotification() {
     	Assert.assertTrue(MessageScreen_order.VerifyReadUnreadNotification());
     }
-    
-    @Test(priority = 3)
+    @Test(priority = 0)
+    public void verifyGoToRopage() {
+    	Assert.assertTrue(MessageScreen_order.ConversationGOtoRobtn());
+    }
+    @Test(priority = 0)
     public void VerifySearchfilterbtn() {
     	Assert.assertTrue(MessageScreen_order.SearchMessagefilter());
     }
 
-	@Test(priority = 3)
+	@Test(priority = 0)
 	public void clickOn_MYfilterBotton() {
 		Assert.assertTrue(MessageScreen_order.click_My_filterBotton());
 	}

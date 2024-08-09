@@ -6,6 +6,7 @@ import java.util.List;
 import org.openqa.selenium.ElementNotInteractableException;
 import org.testng.SkipException;
 
+import com.microsoft.playwright.Frame;
 import com.microsoft.playwright.FrameLocator;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
@@ -536,8 +537,9 @@ public class MessageScreen_Order extends JavaUtility {
 		String converstitlename = iframe.locator(Converstiontitlename).innerText().toLowerCase();
 		System.out.println(conversinfoname + converstextlabelname + converstitlename);
 		iframe.locator(ConversationInfobn).click();
-		if (conversinfoname.contains(converstitlename) && conversinfoname.contains(converstextlabelname)){
-			logger.info("All names are Matched :" + converstitlename + ":"+ conversinfoname +":"+ converstextlabelname);
+		if (conversinfoname.contains(converstitlename) && conversinfoname.contains(converstextlabelname)) {
+			logger.info(
+					"All names are Matched :" + converstitlename + ":" + conversinfoname + ":" + converstextlabelname);
 			flags.add(true);
 		} else {
 			logger.info("error message");
@@ -545,45 +547,114 @@ public class MessageScreen_Order extends JavaUtility {
 		}
 		return !flags.contains(false);
 	}
+
 	private String SearchFilter2 = ".channels-search div.mat-mdc-text-field-wrapper div.mat-mdc-form-field-focus-overlay ";
 	private String SearchFilter = "#mat-input-0";
 	private String SearchbtnSvg = ".mat-mdc-form-field-flex.ng-tns-c3736059725-2 .mat-mdc-form-field-icon-prefix svg";
 	private String Searchbtnfiltersvg = ".mat-mdc-form-field-flex.ng-tns-c3736059725-2 .mat-mdc-form-field-icon-suffix svg";
-	
+
 	public boolean SearchMessagefilter() {
 		page.waitForTimeout(5000);
 		FrameLocator iframe = page.frameLocator(messageIframe);
-		List<Boolean> flags =  new ArrayList<>();
-		if(iframe.locator(SearchFilter2).isVisible()){
+		List<Boolean> flags = new ArrayList<>();
+		if (iframe.locator(SearchFilter2).isVisible()) {
 			iframe.locator(SearchFilter).fill("suraj");
 			page.waitForTimeout(2000);
 			logger.info("Search Filter is not Present");
 			flags.add(false);
-		}
-		else{ 
+		} else {
 			String name = "Suraj";
-		    iframe.locator(SearchFilter).fill(name);
+			iframe.locator(SearchFilter).fill(name);
 		}
-		
+
 		return !flags.contains(false);
+
+	}
+
+	private String ConversationTab = "#header-info p";
+	private String ReadUnreadbtn = ".info-container__content__actions span";
+
+	private String MessageRedDotNotification = ".channels-list-item__unreads-container.ng-star-inserted span";
+	private String Messagebandage = "#my-service-message span.km-tab";
+
+	public boolean VerifyReadUnreadNotification() {
+
+		FrameLocator iframe = page.frameLocator(messageIframe);
+		// iframe.locator("#first-content button span:nth-child(2)").click();
+
+		List<Boolean> flags = new ArrayList<>();
+
+		page.waitForCondition(() -> iframe.locator(ConversationTab).isVisible());
+		if (!iframe.locator(Conversation_GotoRo_btn).isVisible()) {
+			logger.info("Conversation Tab Not Visible");
+			flags.add(false);
+		}
+		logger.info("Conversation Tab Visible");
+
+		page.waitForTimeout(4000);
+		String beforeupdate;
+
+		if (page.locator(Messagebandage).isVisible()) {
+			logger.info("Unread messages are present");
 		
+			int count = iframe.locator(MessageRedDotNotification).count();
+		    String Str = String.valueOf(count);
+		    System.out.println(Str);
+			if (!iframe.locator(ReadUnreadbtn).isVisible()) {
+			logger.info("Button has not clicked");
+				flags.add(false);
+			}
+		    iframe.locator(ReadUnreadbtn).click();
+			logger.info("Button has clicked");
+			page.waitForTimeout(5000);
+			beforeupdate = page.locator(Messagebandage).innerText();
+			System.out.println(beforeupdate);
+			logger.info("a");
+			
+			
+		} else {
+			beforeupdate = "0";
+			logger.info("No Unread Message present");
+			if (!iframe.locator(ReadUnreadbtn).isVisible()) {
+				logger.info("Button has not clicked");
+					flags.add(false);
+				}
+			    iframe.locator(ReadUnreadbtn).click();
+				logger.info("Button has clicked");
+				beforeupdate = page.locator(Messagebandage).innerText();
+				System.out.println(beforeupdate);
+				logger.info("a");
+				int count = iframe.locator(MessageRedDotNotification).count();
+			    String Str = String.valueOf(count);
+			    System.out.println(Str);
+		}	
+		return !flags.contains(false);
 	}
 	
-	private String Conversationtab = "#first-content div div div";
-	private String ReadUnreadbtn = ".info-container__content__actions span";
-//	private String
-//	private String
+	private String Conversation_GotoRo_btn = "button.order-button";
+	private String ReturnToMessagePAge = ".main-body div div.return p";
+	private String RopageIframe = "messages-iframe";
+	private String Conversationtbcanclebtn = ".info-container__header__close-btn mat-icon svg";
+		
 	
-	public boolean VerifyReadUnreadNotification() {
+	public boolean ConversationGOtoRobtn() {
 		
 		FrameLocator iframe = page.frameLocator(messageIframe);
-		
-		iframe.locator(ReadUnreadbtn).click();
-		page.waitForTimeout(2000);
-		return true;
-		}
-		
-		
-		
 	
+		
+		page.waitForCondition(()-> iframe.locator(Conversation_GotoRo_btn).isVisible());
+		if(!iframe.locator(Conversation_GotoRo_btn).isVisible()) {
+			logger.info("Go To Ro button not visible");
+			return false;
+		}
+		iframe.locator(Conversation_GotoRo_btn).click();
+		logger.info("GO_TO_RO button clicked");
+		
+		page.waitForCondition(()-> iframe.locator(ReturnToMessagePAge).isVisible());
+		iframe.locator(ReturnToMessagePAge).click();
+		logger.info("ReturnToMessagePAge");
+		iframe.locator(Conversationtbcanclebtn).click();
+		return true;
+	}
+
 }
