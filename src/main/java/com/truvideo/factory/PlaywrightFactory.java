@@ -4,6 +4,9 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.Properties;
+
+import org.testng.annotations.Parameters;
+
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.BrowserType;
@@ -44,30 +47,31 @@ public class PlaywrightFactory extends JavaUtility {
 		return tlPage.get();
 	}
 
-	public Page initBrowser(Properties prop) {
-		String browserName = prop.getProperty("browser").trim();
+	
+	//public Page initBrowser(Properties prop)
+	public Page initBrowser(String browserName, boolean headless)
+	{
+		//String browserName = prop.getProperty("browser").trim();     //Comment this line if we want to start by parameter
 		System.out.println("Browser name is : " + browserName);
 		tlPlaywright.set(Playwright.create());
 		ArrayList<String> argument = new ArrayList<>();
 		argument.add("--start-maximized");
 
-		switch(browserName.toLowerCase()) {
+		switch (browserName.toLowerCase()) {
 		case "chromium":
 			tlBrowser.set(getPlaywright().chromium().launch(new BrowserType.LaunchOptions().setHeadless(false)));
 			break;
-
-		case"firefox":
-			tlBrowser.set(getPlaywright().firefox().launch(new BrowserType.LaunchOptions().setChannel("firefox").setHeadless(false)));
-
+		case "firefox":
+			tlBrowser.set(getPlaywright().firefox().launch(new LaunchOptions().setChannel("firefox").setHeadless(false).setArgs(argument)));
 			break;
 		case "safari":
 			tlBrowser.set(getPlaywright().webkit().launch(new BrowserType.LaunchOptions().setHeadless(false)));
 			break;
 		case "chrome":
 			tlBrowser.set(
-					getPlaywright().chromium().launch(new LaunchOptions().setChannel("chrome").setHeadless(false).setArgs(argument)));
+					getPlaywright().chromium().launch(new LaunchOptions().setChannel("chrome").setHeadless(headless).setArgs(argument)));
 			break;
-		case   "edge":
+		case "edge":
 			tlBrowser.set(
 					getPlaywright().chromium().launch(new LaunchOptions().setChannel("msedge").setHeadless(false).setArgs(argument)));
 			break;
@@ -108,3 +112,4 @@ public class PlaywrightFactory extends JavaUtility {
 	}
 
 }
+
