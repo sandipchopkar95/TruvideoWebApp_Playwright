@@ -53,7 +53,7 @@ public class LoginPage extends JavaUtility {
 		page.fill(password_Field, "");
 		page.click(logIn_Button);
 		logger.info("Clicked on LogIn button without entering credentials");
-		String errorMessage = page.textContent(errorAlertMessage_Login);
+		String errorMessage = page.textContent(errorAlertMessage_Login).trim();
 		logger.info("Error message displayed for null credentials as : " + errorMessage);
 		page.locator(close_Button_ErrorAlert).first().click();
 		return errorMessage;
