@@ -12,11 +12,23 @@ public class BaseTest {
 	protected Properties prop;
 	protected LoginPage loginpage;
 
+	@Parameters({ "browser", "headless" }) // this line is added
 	@BeforeTest
-	public void loginPageSetup() {
+	public void loginPageSetup(@Optional("chrome") String browser, @Optional("false") String headless) {
 		pf = new PlaywrightFactory();
 		prop = pf.init_prop(); // will call config file
-		page = pf.initBrowser(prop);
+
+		if (browser == null || browser.isEmpty()) {
+			browser = prop.getProperty("browser", "chrome");
+		}
+
+		if (headless == null || headless.isEmpty()) {
+			headless = prop.getProperty("headless", "false");
+		}
+
+		boolean headlessMode = Boolean.parseBoolean(headless);
+		page = pf.initBrowser(browser, headlessMode);
+
 		loginpage = new LoginPage(page); // Initialize LoginPage with the Page instance
 	}
 
@@ -24,7 +36,5 @@ public class BaseTest {
 	public void tearDown() {
 		page.context().browser().close();
 	}
-
-	
 
 }
