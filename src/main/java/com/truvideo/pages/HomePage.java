@@ -21,7 +21,7 @@ public class HomePage extends JavaUtility {
 
 	private String repairOrder_Header = "a[href='/crud/repair-order']";
 	private String users_Header = "a[href='/organization/tce-users/']";
-	private String orderMessage_Header = "#service-messages-link";
+	private String orderMessage_Header = "a#service-messages-link"; // path changed by suraj
 	private String prospect_Header = "a[href='/crud/sales']";
 	private String prospectMessage_Header = "#sales-messages-link";
 	private String reminder_Header = "a[href='/reminder?filterBy=MY_REMINDERS']";
@@ -157,6 +157,7 @@ public class HomePage extends JavaUtility {
 
 	public MessageScreen_Order navigateToMessageScreen_Order() {
 		page.click(orderMessage_Header);
+		page.waitForTimeout(5000);
 		return new MessageScreen_Order(page);
 	}
 
@@ -1084,5 +1085,6 @@ public class HomePage extends JavaUtility {
 			return false;
 		}
 	}
-
 }
+
+

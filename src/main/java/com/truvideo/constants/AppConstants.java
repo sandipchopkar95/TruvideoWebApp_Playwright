@@ -40,22 +40,21 @@ public class AppConstants {
 	public static final String ERROR_MESSAGE_USER_NOT_AVAILABLE_FOR_EMAIL = "No User Retrieved with Username/Email Provided.";
 	// RO List Page
 	public static final String ERROR_MESSAGE_CLICKONCLOSERO_WHEN_RONOTSELECTED = "Please select repair orders to be closed.";
-	public static final String SUCESS_MESSAGE_RO_CLOSE_WHEN_RO_SELECTED ="Repair orders have been successfully closed";
-	public static final String ADD_ORDER_URL="https://rc.truvideo.com/crud/repair-order/0";
-   //RO Details Page
+	public static final String SUCESS_MESSAGE_RO_CLOSE_WHEN_RO_SELECTED = "Repair orders have been successfully closed";
+	public static final String ADD_ORDER_URL = "https://rc.truvideo.com/crud/repair-order/0";
+	// RO Details Page
 	public static final String PRINT_SCREEN_URL = "https://dashboard-rc.truvideo.com/";
-	
-	//Users Page
+
+	// Users Page
 	public static final String USER_SAVED_MESSAGE = "Record has been successfully added";
 	public static final String USER_DEACTIVATE_MESSAGE = "Successfully changed the user status to inactive";
 	public static final String USER_ACTIVATE_MESSAGE = "Successfully changed the user status to active";
 	public static final String USER_SEND_INVITE_TO_APP_MESSAGE = "Sent invitation to app";
 	public static final String USER_SEND_INVITE_TO_WEB_DASHBOARD_MESSAGE = "Sent invitation to app";
 	public static final String USER_DEVICE_DEACTIVATE_MESSAGE = "Sent invitation to app";
-	
-	
-	//SO List Page
+
+	// SO List Page
 	public static final String ERROR_MESSAGE_CLICKONCLOSESO_WHEN_SONOTSELECTED = "Please select sales prospects to be closed.";
-	public static final String SUCESS_MESSAGE_SO_CLOSE_WHEN_SO_SELECTED ="Sales prospects have been successfully closed.";
-	public static final String ADD_PROSPECT_URL="https://rc.truvideo.com/crud/sales/0";
+	public static final String SUCESS_MESSAGE_SO_CLOSE_WHEN_SO_SELECTED = "Sales prospects have been successfully closed.";
+	public static final String ADD_PROSPECT_URL = "https://rc.truvideo.com/crud/sales/0";
 }
