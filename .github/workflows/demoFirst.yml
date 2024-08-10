@@ -32,17 +32,15 @@ jobs:
     - name: Run tests with Xvfb
       run: xvfb-run --auto-servernum -- mvn test -Dsurefire.suiteXmlFiles=TestRunnerSuites/FullRegressionSuite.xml
 
-    - name: List Report Files
+    - name: Set permissions for Report file
+      run: chmod 644 Reports/Index.html
+
+    - name: Debug Report Path
       run: |
-        echo "Listing files in the Reports directory..."
+        echo "Current directory: $(pwd)"
         ls -al Reports
 
-    - name: Debug Report Files
+    - name: Send Email with Report
       run: |
-        echo "Checking if Index.html exists..."
-        if [ -f "Reports/Index.html" ]; then
-          echo "File exists."
-        else
-          echo "File does not exist!"
-        fi
+        # Your email sending logic here, ensuring the path is correct and case-sensitive
 
