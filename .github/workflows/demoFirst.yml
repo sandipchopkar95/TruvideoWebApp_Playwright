@@ -24,30 +24,17 @@ jobs:
     - name: Run tests with Xvfb
       run: xvfb-run --auto-servernum -- mvn test -Dsurefire.suiteXmlFiles=TestRunnerSuites/FullRegressionSuite.xml
     
-    # Debugging steps to identify the correct path for Reports directory
-    - name: Print Current Working Directory
-      run: pwd
-    
-    - name: List All Files and Directories
-      run: |
-        echo "Listing all files and directories in the current directory..."
-        ls -al
-        echo "Listing contents of the TruvideoWeb_Playwright directory..."
-        ls -al TruvideoWeb_Playwright
-        echo "Listing contents of the target directory..."
-        ls -al TruvideoWeb_Playwright/target
-    
-    # List the files in the Reports directory based on the expected path
+    # List the files in the Reports directory based on the correct path
     - name: List Report Files
       run: |
         echo "Listing files in the Reports directory..."
-        ls -al TruvideoWeb_Playwright/Reports
+        ls -al Reports
     
     # Debug to check if index.html exists in the Reports directory
     - name: Debug Report Files
       run: |
         echo "Checking if index.html exists..."
-        if [ -f "TruvideoWeb_Playwright/Reports/index.html" ]; then
+        if [ -f "Reports/index.html" ]; then
           echo "File exists."
         else
           echo "File does not exist!"
