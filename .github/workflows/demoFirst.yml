@@ -11,18 +11,39 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: '11'
+    
     - name: Build & Install
       run: mvn -B install -D skipTests --no-transfer-progress
+    
     - name: Install Xvfb
       run: sudo apt-get install -y xvfb
+    
     - name: Install Playwright
       run: mvn exec:java -e -D exec.mainClass=com.microsoft.playwright.CLI -D exec.args="install --with-deps"
+    
     - name: Run tests with Xvfb
       run: xvfb-run --auto-servernum -- mvn test -Dsurefire.suiteXmlFiles=TestRunnerSuites/FullRegressionSuite.xml
+    
+    # Debugging steps to identify the correct path for Reports directory
+    - name: Print Current Working Directory
+      run: pwd
+    
+    - name: List All Files and Directories
+      run: |
+        echo "Listing all files and directories in the current directory..."
+        ls -al
+        echo "Listing contents of the TruvideoWeb_Playwright directory..."
+        ls -al TruvideoWeb_Playwright
+        echo "Listing contents of the target directory..."
+        ls -al TruvideoWeb_Playwright/target
+    
+    # List the files in the Reports directory based on the expected path
     - name: List Report Files
       run: |
         echo "Listing files in the Reports directory..."
         ls -al TruvideoWeb_Playwright/Reports
+    
+    # Debug to check if index.html exists in the Reports directory
     - name: Debug Report Files
       run: |
         echo "Checking if index.html exists..."
@@ -31,9 +52,11 @@ jobs:
         else
           echo "File does not exist!"
         fi
+    
     - name: Run Email Report Sender
       run: mvn exec:java -Dexec.mainClass=com.truvideo.testutils.EmailReportSender
       env:
         EMAIL_USER: ${{ secrets.EMAIL_USER }}
         EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+
 
