@@ -20,7 +20,7 @@ jobs:
     - name: Run tests with Xvfb
       run: xvfb-run --auto-servernum -- mvn test -Dsurefire.suiteXmlFiles=TestRunnerSuites/FullRegressionSuite.xml
     - name: Send Report via Email
-      run: mvn exec:java -Dexec.mainClass=com.truvideo.testutils.Listeners
+      run: mvn exec:java -Dexec.mainClass=com.truvideo.testutils.Listeners -Dexec.classpathScope=test
       env:
         EMAIL_USER: ${{ secrets.EMAIL_USER }}
         EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
