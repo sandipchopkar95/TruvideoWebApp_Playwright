@@ -19,4 +19,20 @@ jobs:
       run: mvn exec:java -e -D exec.mainClass=com.microsoft.playwright.CLI -D exec.args="install --with-deps"
     - name: Run tests with Xvfb
       run: xvfb-run --auto-servernum -- mvn test -Dsurefire.suiteXmlFiles=TestRunnerSuites/FullRegressionSuite.xml
-  
+    - name: List Report Files
+      run: |
+        echo "Listing files in the Reports directory..."
+        ls -al TruvideoWebApp_Playwright/Reports
+    - name: Debug Report Files
+      run: |
+        echo "Checking if index.html exists..."
+        if [ -f "TruvideoWebApp_Playwright/Reports/index.html" ]; then
+          echo "File exists."
+        else
+          echo "File does not exist!"
+        fi
+    - name: Run Email Report Sender
+      run: mvn exec:java -Dexec.mainClass=com.truvideo.testutils.EmailReportSender
+      env:
+        EMAIL_USER: ${{ secrets.EMAIL_USER }}
+        EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
