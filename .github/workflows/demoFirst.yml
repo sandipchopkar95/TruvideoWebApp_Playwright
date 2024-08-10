@@ -22,11 +22,11 @@ jobs:
     - name: List Report Files
       run: |
         echo "Listing files in the Reports directory..."
-        ls -al TruvideoWebApp_Playwright/Reports
+        ls -al TruvideoWeb_Playwright/Reports
     - name: Debug Report Files
       run: |
         echo "Checking if index.html exists..."
-        if [ -f "TruvideoWebApp_Playwright/Reports/index.html" ]; then
+        if [ -f "TruvideoWeb_Playwright/Reports/index.html" ]; then
           echo "File exists."
         else
           echo "File does not exist!"
@@ -36,3 +36,4 @@ jobs:
       env:
         EMAIL_USER: ${{ secrets.EMAIL_USER }}
         EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+
