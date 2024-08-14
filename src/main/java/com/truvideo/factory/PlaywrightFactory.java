@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 
-
-=======
->>>>>>> 6a119a043b5c54712ff6b5e4da7d1f2ab45daacd
 package com.truvideo.factory;
 
 import java.awt.Dimension;
