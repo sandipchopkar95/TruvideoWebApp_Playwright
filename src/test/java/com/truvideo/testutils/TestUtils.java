@@ -57,16 +57,37 @@ static ExtentReports extent;
 	}
 
 	public void sendReportToEmail() {
-		try {
+		//try {
 			// Create the attachment
 			EmailAttachment attachment = new EmailAttachment();
 			attachment.setPath(System.getProperty("user.dir") + "/Reports/index.html");
 			attachment.setDisposition(EmailAttachment.ATTACHMENT);
 			attachment.setDescription("Extent Report");
+			
+			try {
+		        String reportPath;
+
+		        // Determine the path based on the environment
+		        if (System.getProperty("os.name").toLowerCase().contains("win")) {
+		            reportPath = "D:/TruvideoWeb_Playwright/Reports/Index.html"; // Adjust for Windows
+		        } else {
+		            reportPath = System.getProperty("user.dir") + "/Reports/Index.html"; // Default relative path
+		        }
+
+		        File reportFile = new File(reportPath);
+		        if (!reportFile.exists()) {
+		            System.err.println("Report file not found at: " + reportPath);
+		            return;
+		        }
+
+		        System.out.println("Report file found: " + reportPath);
+			
+			
 			// Create the email message
 			MultiPartEmail email = new MultiPartEmail();
 			email.setHostName("smtp.mail.yahoo.com");
 			email.setSmtpPort(465); // port
+			email.setTLS(true);
 			email.setAuthenticator(new DefaultAuthenticator("sandip.chopkar@5exceptions.com", "scusooxsoohzvlfz")); // pass=AppPass
 			email.setSSLOnConnect(true); // Use SSL
 			email.setFrom("sandip.chopkar@5exceptions.com");
