@@ -375,7 +375,7 @@ public class UserPage extends JavaUtility {
 		page.waitForTimeout(4000);
 		Thread.sleep(3000);
 		String topRightCornerNotificationPopup = page.innerText(topRightCornerNotification);
-		String topRightCornerNotificationPopup1 = topRightCornerNotificationPopup.replace('×', ' ').trim();
+		String topRightCornerNotificationPopup1 = topRightCornerNotificationPopup.replace('b', ' ').trim();
 		logger.info(topRightCornerNotificationPopup1);
 		boolean isUserActivateMessageDispayed = false;
 		if (topRightCornerNotificationPopup1.contains(AppConstants.USER_DEACTIVATE_MESSAGE)) {
