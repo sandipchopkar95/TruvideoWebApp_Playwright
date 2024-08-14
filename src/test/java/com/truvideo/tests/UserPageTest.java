@@ -14,36 +14,45 @@ public class UserPageTest extends BaseTest {
 				.navigateToUserspage();
 	}
 
-	@Test
+	@Test (priority = 2)
 	public void verifyRequiredFieldinAddUser() throws InterruptedException {
-		userPage.addNewUser("Service Dashboard", "Kenility Store");
+		userPage.addNewAdvisor("Service Dashboard", "Kenility Store");
 	}
 
-	@Test
+	@Test(priority = 1)
 	public void verifyNewTechnicianUser() throws InterruptedException {
 		userPage.addNewTechnician("Kenility Store", "Service App");
 	}
-
-	@Test
+	@Test(priority = 3)
+	public void verifyNewSalesUser() throws InterruptedException {
+		userPage.addNewSalesUser("Sales App and Dashboard","Kenility Store");
+	}
+	@Test(priority = 4)
+	public void verifyNewSalesManagerCreation() throws InterruptedException {
+		userPage.addNewSalesManager("Sales Manager","Kenility Store");
+	}
+	@Test(priority = 5)
+	public void verifyNewAdminUserCreation() throws InterruptedException {
+		userPage.addNewAdminUser("Administrator","Kenility Store");
+	}
+	@Test(priority = 9)
 	public void updatePasswordNewUser() throws InterruptedException {
 		userPage.updateUserPassword("Service Dashboard", "Kenility Store", "Test123");
 	}
-
-	@Test(priority = 2)
+	@Test(priority = 10)
 	public void loginwithNewUser() throws InterruptedException {
 		userPage.loginwithNewUser("Service Dashboard", "Kenility Store", "Test123", "updatedpassword");
 	}
 
-	@Test
+	@Test(priority = 7)
 	public void verifyUserStatus() throws InterruptedException {
 		userPage.userStatus();
 	}
-
-	@Test
+	@Test(priority = 6)
 	public void verifyBulkUserCreation() throws InterruptedException {
 		userPage.bulkCreateUser();
 	}
-	@Test
+	@Test(priority = 8)
 	public void verifyselectActionsonUser() throws InterruptedException {
 		userPage.actionsOnUsers();
 	}
