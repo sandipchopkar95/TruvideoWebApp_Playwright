@@ -1,3 +1,4 @@
+
 package com.truvideo.constants;
 
 public class AppConstants {
@@ -58,3 +59,4 @@ public class AppConstants {
 	public static final String SUCESS_MESSAGE_SO_CLOSE_WHEN_SO_SELECTED = "Sales prospects have been successfully closed.";
 	public static final String ADD_PROSPECT_URL = "https://rc.truvideo.com/crud/sales/0";
 }
+

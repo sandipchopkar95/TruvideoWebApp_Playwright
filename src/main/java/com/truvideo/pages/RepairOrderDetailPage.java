@@ -94,6 +94,8 @@ public class RepairOrderDetailPage extends JavaUtility {
 	private String lastMessageEndlink = "ngx-message div.message a";
 	private String playButton = "button[title='Play Video']";
 	private String authoriseWork_Button = "button:has-text('Authorize Work')";
+	// Edit RO
+	
 
 	private String getRO(String createdRO) {
 		String createdRoInList = "#repair-order-results tbody tr:has-text('" + createdRO + "')";

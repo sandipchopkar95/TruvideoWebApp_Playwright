@@ -111,3 +111,4 @@ public class LoginPage extends JavaUtility {
 		return new ForgotPasswordPage(page);
 	}
 }
+
