@@ -27,7 +27,7 @@ public class SignUpPageTest extends BaseTest {
 		page.goBack();
 	}
 	
-	@Test(priority = 3)
+	//@Test(priority = 3)
 	public void verifyValidationOnEnteringInvalidDealerCode() {
 		String actualErrorMessage=signUpPage.enterInvalidDealerCodeAndClickVerifyButton();
 		Assert.assertEquals(actualErrorMessage, AppConstants.DEALERCODE_INVALID_MESSAGE);

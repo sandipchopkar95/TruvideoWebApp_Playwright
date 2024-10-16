@@ -14,6 +14,7 @@ public class BaseTest {
 
 	@Parameters({ "browser", "headless" }) // this line is added
 	@BeforeTest
+	//@BeforeMethod
 	public void loginPageSetup(@Optional("chrome") String browser, @Optional("false") String headless) {
 		pf = new PlaywrightFactory();
 		prop = pf.init_prop(); // will call config file
@@ -33,6 +34,7 @@ public class BaseTest {
 	}
 
 	@AfterTest
+	//@AfterMethod
 	public void tearDown() {
 		page.context().browser().close();
 	}

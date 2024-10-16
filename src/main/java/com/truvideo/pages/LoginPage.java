@@ -14,9 +14,10 @@ public class LoginPage extends JavaUtility {
 	private String password_Field = "input[name='j_password']";
 	private String logIn_Button = "input[value='Log In']";
 	private String createAccount_ButtonLink = "#register-user";
-	private String forgotPassword_ButtonLink = "#forgot-password";
+	private String forgotPassword_ButtonLink = "#forgot-password"; //added alert word
 	private String errorAlertMessage_Login = "div[class='alert alert-error']";
 	private String close_Button_ErrorAlert = "a[class='close']";
+	//private String close_Button_ErrorAlert = "b 2 a[class='close']";
 
 	public static String logInUsername;
 	public static String logInDealer;
@@ -83,7 +84,7 @@ public class LoginPage extends JavaUtility {
 		page.fill(username_Field, username);
 		logger.info("Entered User Name"+username);
 		page.fill(password_Field, password);
-		logger.info("Entered Password"+password);
+		logger.info("Entered Password:-  ********");
 		page.click(logIn_Button);
 		logger.info("Navigated to the Home Page");
 		HomePage homePage = new HomePage(page);
@@ -103,6 +104,7 @@ public class LoginPage extends JavaUtility {
 
 	public SignUpPage navigateToSignUpPage() {
 		page.click(createAccount_ButtonLink);
+		logger.info("Cliked on Signup page");
 		return new SignUpPage(page);
 	}
 

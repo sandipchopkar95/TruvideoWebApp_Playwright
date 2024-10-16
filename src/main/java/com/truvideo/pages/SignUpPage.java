@@ -31,9 +31,13 @@ public class SignUpPage extends JavaUtility {
 	private String Invalidated_UserName_CrossMark = "#validate-username-not-ok";
 
 	public boolean validateAllAvailableElements_SignUpPage() {
-		if (page.isVisible(signUpUser_Heading) && page.isVisible(dealerCode_LabelText)
+		page.waitForTimeout(2000);
+		if (page.isVisible(signUpUser_Heading) &&
+				page.isVisible(dealerCode_LabelText)
 				&& page.isVisible(dealerCode_TextBox) && page.isVisible(verify_DealerCode_Button)
-				&& page.isVisible(alreadyHaveAnAccount_Text) && page.isVisible(signIn_Navigation_Button)) {
+				&& page.isVisible(alreadyHaveAnAccount_Text)
+				&& page.isVisible(signIn_Navigation_Button)
+				) {
 			logger.info("All Required elemets are available on Sign Up page");
 			logger.info("Sign Up User heading is available on Sign Up page");
 			logger.info("Dealer Code label text is available on Sign Up page");

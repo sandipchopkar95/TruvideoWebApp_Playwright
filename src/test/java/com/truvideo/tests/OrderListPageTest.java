@@ -19,24 +19,19 @@ public class OrderListPageTest extends BaseTest {
 		Assert.assertTrue(orderlistpage.checkAllAvailableElements_ROListPage());
 	}
 
-	@Test(priority = 2)
-	public void verify_MyROs_Filter() {
-		Assert.assertTrue(orderlistpage.clickOn_MyROs_Filter());
-	}
+	@DataProvider(name = "filterTypes")
+	public Object[][] filterTypes() {
+		return new Object[][] { { "myros", true }, 
+								{ "allopen", true }, 
+								{ "forreview", true }, 
+								{ "allclosed", true },
+								{ "invalidFilter", false } };
+									}
 
-	@Test(priority = 3)
-	public void verify_AllOpen_Filter() {
-		Assert.assertTrue(orderlistpage.clickOn_AllOpen_Filter());
-	}
-
-	@Test(priority = 4)
-	public void verify_ForReview_Filter() {
-		Assert.assertTrue(orderlistpage.clickOn_ForReview_Filter());
-	}
-
-	@Test(priority = 5)
-	public void verify_AllClosed_Filter() {
-		Assert.assertTrue(orderlistpage.clickOn_AllClosed_Filter());
+	@Test(dataProvider = "filterTypes")
+	public void testFilters(String filterType, boolean expectedResult) {
+		boolean result = orderlistpage.clickOnFilter(filterType);
+		Assert.assertEquals(result, expectedResult, "Filter type: " + filterType + " did not behave as expected.");
 	}
 
 	@Test(priority = 6)
@@ -64,35 +59,21 @@ public class OrderListPageTest extends BaseTest {
 		Assert.assertTrue(orderlistpage.checkAllMandatoryErrorMessage());
 	}
 
-//	@Test(priority = 11)
-//	public void verifyAddRepairOrder() throws Exception {
-//		String newCreatedRO = orderlistpage.addRepairOrder();
-//		String firstROInList = orderlistpage.getFirstROInList();
-//		Assert.assertEquals(firstROInList, newCreatedRO);
-//	}
-	
-	
-	  @Test(priority = 11)
-	    public void verifyAddRepairOrder() throws Exception {
-	        String newCreatedRO = orderlistpage.addRepairOrder();
-	        String firstROInList = orderlistpage.getFirstROInList();
-	        
-//	        String testCaseId = "686"; // Replace with your actual Zephyr test case ID
-//	        try {
-//	            Assert.assertEquals(firstROInList, newCreatedRO);
-//	            ZephyrReporter.publishTestResult(testCaseId, "Pass");
-//	        } catch (AssertionError e) {
-//	            ZephyrReporter.publishTestResult(testCaseId, "Fail");
-//	            throw e;
-//	        }
-	    }
-	
-	
-	
+	@Test(priority = 11)
+	public void verifyAddRepairOrder() throws Exception {
+		String newCreatedRO = orderlistpage.addRepairOrder();
+		String firstROInList = orderlistpage.getFirstROInList();
+		Assert.assertEquals(firstROInList, newCreatedRO);
+	}
 
 	@Test(priority = 12, dependsOnMethods = "verifyAddRepairOrder")
 	public void verifyCreatedROIsVisibleObMobileApp() throws Exception {
 		orderlistpage.verifyCreatedRO_OnMobile();
+	}
+
+	@Test(priority = 18)
+	public void verifyInspectionStatus() {
+		Assert.assertTrue(orderlistpage.checkInspectionStatus());
 	}
 
 }
